@@ -1,15 +1,13 @@
 import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import MyAwesomeReactComponent from './MyAwesomeReactComponent';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import Menu from './components/Menu';
-import externalstyles from './App.css';
 
-class App extends React.Component {
+let styles;
+
+class AllServices extends React.Component {
   
   constructor(props) {
     super(props);
@@ -24,7 +22,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-          <Menu />
+        <h1>All Services</h1>
         </MuiThemeProvider>
 
       </div>
@@ -32,4 +30,8 @@ class App extends React.Component {
   }
 }
 
-export default App;
+styles = {
+  
+};
+
+export default AllServices;
