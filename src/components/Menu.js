@@ -4,7 +4,6 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import FlatButton from 'material-ui/FlatButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import { Router, withRouter, Route } from "react-router";
 import About from '../views/About';
 import AllServices from '../views/allServices';
 import MyChannels from '../views/myChannels';
@@ -16,17 +15,12 @@ class Menu extends React.Component {
   
   constructor(props) {
     super(props);
-    this.navigateToServices = this.navigateToServices.bind(this);
     this.state = {
-      value: 3,
+
     };
   }
 
   handleChange = (event, index, value) => this.setState({value});
-  
-  navigateToServices = () => {
-    this.props.router.push("/compare");
-  };
 
   render() {
     return (
@@ -47,7 +41,7 @@ class Menu extends React.Component {
               style={styles.buttonStyle} 
               label="Compare All services" 
               onClick={() => {
-                this.navigateToServices;
+                
               }}
               primary={true} />
           <FlatButton 
@@ -86,4 +80,4 @@ styles = {
   },
 };
 
-export default withRouter(Menu);
+export default Menu;
