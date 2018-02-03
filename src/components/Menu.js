@@ -4,9 +4,11 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import FlatButton from 'material-ui/FlatButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import { Route, Switch } from "react-router-dom";
+import { Router, withRouter, Route } from "react-router";
 import About from '../views/About';
 import AllServices from '../views/allServices';
+import MyChannels from '../views/myChannels';
+import MyShows from '../views/myShows';
 
 let styles;
 
@@ -14,6 +16,7 @@ class Menu extends React.Component {
   
   constructor(props) {
     super(props);
+    this.navigateToServices = this.navigateToServices.bind(this);
     this.state = {
       value: 3,
     };
@@ -21,6 +24,10 @@ class Menu extends React.Component {
 
   handleChange = (event, index, value) => this.setState({value});
   
+  navigateToServices = () => {
+    this.props.router.push("/compare");
+  };
+
   render() {
     return (
       <div className="App">
@@ -33,29 +40,27 @@ class Menu extends React.Component {
               style={styles.buttonStyle} 
               label="About this App"
               onClick={() => {
-                <Switch>
-                <Route path='/' component={About}/>
-                </Switch>
+                
               }} 
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle} 
               label="Compare All services" 
               onClick={() => {
-                <Route path='/compare/' component={AllServices}/>
+                this.navigateToServices;
               }}
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle} 
               label="My Channel Lineup" 
               onClick={() => {
-                this.handleCallToRouter
+
               }}
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle}
               onClick={() => {
-                this.handleCallToRouter
+
               }} 
               label="My Shows" 
               primary={true} />
@@ -81,4 +86,4 @@ styles = {
   },
 };
 
-export default Menu;
+export default withRouter(Menu);

@@ -21,9 +21,10 @@ class About extends React.Component {
   render() {
     return (
       <div className="App">
-        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
         <h1>ABOUT</h1>
-        </MuiThemeProvider>
+        <h1>ABOUT</h1>
+        <h1>ABOUT</h1>
+        <h1>ABOUT</h1>
 
       </div>
     );
