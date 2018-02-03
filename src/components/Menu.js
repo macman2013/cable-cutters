@@ -4,10 +4,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import FlatButton from 'material-ui/FlatButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import About from '../views/About';
-import AllServices from '../views/allServices';
-import MyChannels from '../views/myChannels';
-import MyShows from '../views/myShows';
+import API from '../API';
 
 let styles;
 
@@ -34,27 +31,27 @@ class Menu extends React.Component {
               style={styles.buttonStyle} 
               label="About this App"
               onClick={() => {
-                
+                API.changePath('/');
               }} 
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle} 
               label="Compare All services" 
               onClick={() => {
-                
+                API.changePath('/compare');
               }}
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle} 
               label="My Channel Lineup" 
               onClick={() => {
-
+                API.changePath('/channels');
               }}
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle}
               onClick={() => {
-
+                API.changePath('/compare');
               }} 
               label="My Shows" 
               primary={true} />
