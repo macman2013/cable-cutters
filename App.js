@@ -2,12 +2,11 @@ import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import Menu from './components/Menu';
 
-let styles;
-
-class MyChannels extends React.Component {
+class App extends React.Component {
   
   constructor(props) {
     super(props);
@@ -15,14 +14,12 @@ class MyChannels extends React.Component {
       value: 3,
     };
   }
-
-  handleChange = (event, index, value) => this.setState({value});
   
   render() {
     return (
       <div className="App">
         <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <h1>My Channels</h1>
+          <Menu />
         </MuiThemeProvider>
 
       </div>
@@ -30,8 +27,4 @@ class MyChannels extends React.Component {
   }
 }
 
-styles = {
-  
-};
-
-export default MyChannels;
+export default App;

@@ -3,6 +3,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import FlatButton from 'material-ui/FlatButton';
+import { Link, browserHistory } from 'react-router-3';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import API from '../API';
 
@@ -17,8 +18,6 @@ class Menu extends React.Component {
     };
   }
 
-  handleChange = (event, index, value) => this.setState({value});
-
   render() {
     return (
       <div className="App">
@@ -27,31 +26,31 @@ class Menu extends React.Component {
         <ToolbarGroup>
           <ToolbarTitle text="Cable Cutters" />
           <ToolbarSeparator />
-          <FlatButton 
+          <FlatButton containerElement={<Link to={"/about"} />}
               style={styles.buttonStyle} 
               label="About this App"
               onClick={() => {
-                API.changePath('/');
+                
               }} 
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle} 
               label="Compare All services" 
               onClick={() => {
-                API.changePath('/compare');
+                browserHistory.push('/compare/');
               }}
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle} 
               label="My Channel Lineup" 
               onClick={() => {
-                API.changePath('/channels');
+                browserHistory.push('/channels/');
               }}
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle}
               onClick={() => {
-                API.changePath('/compare');
+                browserHistory.push('/shows/');
               }} 
               label="My Shows" 
               primary={true} />

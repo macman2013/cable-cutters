@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 
 let styles;
 
-class About extends React.Component {
+class Home extends React.Component {
   
   constructor(props) {
     super(props);
@@ -15,16 +15,14 @@ class About extends React.Component {
       value: 3,
     };
   }
-
-  handleChange = (event, index, value) => this.setState({value});
   
   render() {
     return (
       <div className="App">
-        <h1>ABOUT</h1>
-        <h1>ABOUT</h1>
-        <h1>ABOUT</h1>
-        <h1>ABOUT</h1>
+        <h1>HOME</h1>
+        <h1>HOME</h1>
+        <h1>HOME</h1>
+        <h1>HOME</h1>
 
       </div>
     );
@@ -35,4 +33,4 @@ styles = {
   
 };
 
-export default About;
+export default Home;
