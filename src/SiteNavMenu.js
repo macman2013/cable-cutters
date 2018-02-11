@@ -1,58 +1,48 @@
 import React, { Component } from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import FlatButton from 'material-ui/FlatButton';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
+import TVIcon from 'material-ui-icons/Tv';
 import Home from './views/Home';
 import AllServices from './views/allServices';
 import About from './views/About';
 import MyChannels from './views/myChannels';
 import MyShows from './views/myShows';
 
-let styles;
+const styles = {
+  root: {
+    width: '100%',
+  },
+  flex: {
+    flex: 1,
+  },
+  appTitle: {
+    marginLeft: 6,
+    marginRight: 28,
+  },
+};
 
 class SiteNavMenu extends Component {
   render() {
+    const { classes } = this.props;
     return (
-        <div className='App-content'>
-            <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-            <Toolbar style={styles.barStyle}>
-            <ToolbarGroup>
-              <ToolbarTitle text="Cable Cutters" />
-              <ToolbarSeparator />
-              <FlatButton containerElement={<Link to={"/about"} />}
-                  style={styles.buttonStyle} 
-                  label="About this App"
-                  onClick={() => {
-
-                  }} 
-                  primary={true} />
-              <FlatButton containerElement={<Link to={"/compare"} />}
-                  style={styles.buttonStyle} 
-                  label="Compare All services" 
-                  onClick={() => {
-
-                  }}
-                  primary={true} />
-              <FlatButton containerElement={<Link to={"/channels"} />}
-                  style={styles.buttonStyle} 
-                  label="My Channel Lineup" 
-                  onClick={() => {
-                    
-                  }}
-                  primary={true} />
-              <FlatButton containerElement={<Link to={"/shows"} />}
-                  style={styles.buttonStyle}
-                  onClick={() => {
-                    
-                  }} 
-                  label="My Shows" 
-                  primary={true} />
-            </ToolbarGroup>
-            </Toolbar>
-            </MuiThemeProvider>
+        <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <TVIcon />
+            <Typography variant="title" color="inherit" className={classes.appTitle}>
+              Cable Cutters
+            </Typography>
+            <Button color="inherit" component={Link} to="/compare" className={classes.flex}>Compare All Services</Button>
+            <Button color="inherit" component={Link} to="/channels" className={classes.flex}>Help Me Choose By Channel</Button>
+            <Button color="inherit" component={Link} to="/shows" className={classes.flex}>Help Me Choose By Show</Button>
+            <Button color="inherit" component={Link} to="/about" className={classes.flex}>About this App</Button>
+          </Toolbar>
+      </AppBar>
 
           <Route exact={true} path="/" component={Home}/>
           <Route exact={true} path="/compare" component={AllServices}/>
@@ -64,17 +54,8 @@ class SiteNavMenu extends Component {
     }
   }
 
-  styles = {
-    barStyle: {
-      backgroundColor: '#222',
-      position: 'fixed',
-      top: '0',
-      zIndex: '1000',
-      width: '100%',
-    },
-    buttonStyle: {
-      color: '#fff',
-    },
+  SiteNavMenu.propTypes = {
+    classes: PropTypes.object.isRequired,
   };
-
-export default SiteNavMenu;
+  
+  export default withStyles(styles)(SiteNavMenu);

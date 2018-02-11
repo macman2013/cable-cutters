@@ -9,7 +9,7 @@ class App extends Component {
       <div className="App">
         <SiteNavMenu />
         <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
+          
         </p>
         {/* <CommentBox
         url='http://localhost:3001/api/comments'
