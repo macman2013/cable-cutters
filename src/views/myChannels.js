@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 
 let styles;
 
-class About extends React.Component {
+class MyChannels extends React.Component {
   
   constructor(props) {
     super(props);
@@ -18,11 +18,13 @@ class About extends React.Component {
   
   render() {
     return (
-      <div className="App">
-        <h1>ABOUT</h1>
-        <h1>ABOUT</h1>
-        <h1>ABOUT</h1>
-        <h1>ABOUT</h1>
+      <div>
+        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <h1>My Channels</h1>
+        <h1>My Channels</h1>
+        <h1>My Channels</h1>
+        <h1>My Channels</h1>
+        </MuiThemeProvider>
 
       </div>
     );
@@ -33,4 +35,4 @@ styles = {
   
 };
 
-export default About;
+export default MyChannels;
