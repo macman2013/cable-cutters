@@ -13,7 +13,7 @@ render((
   <Route component={App}>
 
     <Route path="/" component={App} />
-    <Route path="/about" component={About} />
+    <Route path="/about/" component={About} />
     <Route path="/compare" component={Compare} />
     <Route path="/channels" component={Channels} />
     <Route path="/shows" component={Shows} />

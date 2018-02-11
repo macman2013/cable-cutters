@@ -3,7 +3,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import FlatButton from 'material-ui/FlatButton';
-import { Link, browserHistory } from 'react-router-3';
+import { Link, browserHistory, hashHistory } from 'react-router-3';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import API from '../API';
 
@@ -26,18 +26,18 @@ class Menu extends React.Component {
         <ToolbarGroup>
           <ToolbarTitle text="Cable Cutters" />
           <ToolbarSeparator />
-          <FlatButton containerElement={<Link to={"/about"} />}
+          <FlatButton containerElement={<Link to={"/about/"} />}
               style={styles.buttonStyle} 
               label="About this App"
               onClick={() => {
-                
+                hashHistory.push('/about/');
               }} 
               primary={true} />
           <FlatButton 
               style={styles.buttonStyle} 
               label="Compare All services" 
               onClick={() => {
-                browserHistory.push('/compare/');
+                hashHistory.push('/compare/');
               }}
               primary={true} />
           <FlatButton 
