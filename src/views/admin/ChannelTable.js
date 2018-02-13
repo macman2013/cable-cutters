@@ -21,19 +21,17 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import EditIcon from 'material-ui-icons/Build';
 import AddCircleIcon from 'material-ui-icons/AddCircleOutline';
 import { lighten } from 'material-ui/styles/colorManipulator';
+import API from './API';
 
 let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
+function createData(name, category) {
   counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
+  return { id: counter, name, category };
 }
 
 const columnData = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Channel Name' },
+  { id: 'category', numeric: false, disablePadding: true, label: 'Category' }
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -53,6 +51,11 @@ class EnhancedTableHead extends React.Component {
               checked={numSelected === rowCount}
               onChange={onSelectAllClick}
             />
+          </TableCell>
+          <TableCell padding="checkbox">
+          <IconButton disabled aria-label="Edit">
+            <EditIcon />
+          </IconButton>
           </TableCell>
           {columnData.map(column => {
             return (
@@ -177,26 +180,15 @@ const styles = theme => ({
 class ChannelTable extends React.Component {
   constructor(props, context) {
     super(props, context);
+    this.pollInterval = null;
 
     this.state = {
       order: 'asc',
-      orderBy: 'calories',
+      orderBy: 'name',
       selected: [],
       data: [
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Donut', 452, 25.0, 51, 4.9),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
-        createData('Honeycomb', 408, 3.2, 87, 6.5),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Jelly Bean', 375, 0.0, 94, 0.0),
-        createData('KitKat', 518, 26.0, 65, 7.0),
-        createData('Lollipop', 392, 0.2, 98, 0.0),
-        createData('Marshmallow', 318, 0, 81, 2.0),
-        createData('Nougat', 360, 19.0, 9, 37.0),
-        createData('Oreo', 437, 18.0, 63, 4.0),
-      ].sort((a, b) => (a.calories < b.calories ? -1 : 1)),
+        createData('Cupcake', 'News')
+      ].sort((a, b) => (a.name < b.name ? -1 : 1)),
       page: 0,
       rowsPerPage: 5,
     };
@@ -257,6 +249,18 @@ class ChannelTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+  componentDidMount() {
+    API.getChannels();
+    if (!this.pollInterval) {
+      this.pollInterval = 2000
+    } 
+  }
+  //this will prevent error messages every 2 seconds once the CommentBox is unmounted
+  componentWillUnmount() {
+  this.pollInterval && clearInterval(this.pollInterval);
+  this.pollInterval = null;
+  }
+
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
@@ -297,10 +301,7 @@ class ChannelTable extends React.Component {
                       </IconButton>
                     </TableCell>
                     <TableCell padding="none">{n.name}</TableCell>
-                    <TableCell numeric>{n.calories}</TableCell>
-                    <TableCell numeric>{n.fat}</TableCell>
-                    <TableCell numeric>{n.carbs}</TableCell>
-                    <TableCell numeric>{n.protein}</TableCell>
+                    <TableCell padding="none">{n.category}</TableCell>
                   </TableRow>
                 );
               })}

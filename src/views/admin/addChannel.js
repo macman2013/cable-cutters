@@ -16,6 +16,9 @@ import TextField from 'material-ui/TextField';
 import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import { FormControlLabel, FormGroup } from 'material-ui/Form';
+import Select from 'material-ui/Select';
+import { MenuItem } from 'material-ui/Menu';
+import API from './API.js';
 
 
 const styles = theme => ({
@@ -35,19 +38,55 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit + 20,
     marginRight: theme.spacing.unit + 20,
-    width: 600,
+    width: 500,
   },
 });
+
+const chooseCategories = [
+  'Local Broadcast',
+  'Entertainment & Lifestyle',
+  'Family & Kids',
+  'Movies',
+  'News',
+  'Sports',
+  'Premium'
+]
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
 class AddChannel extends React.Component {
-  state = {
-    open: true,
-    name: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = { name: '', category: '', image_url: '', open: true };
+    this.handleChannelNameChange = this.handleChannelNameChange.bind(this);
+    this.handleCategoryChange = this.handleCategoryChange.bind(this);
+    this.handleImageChange = this.handleImageChange.bind(this);
+  }
+  handleChannelNameChange(e) {
+    console.log("IN NAME");
+    this.setState({ name: e.target.value });
+  }
+  handleCategoryChange(e) {
+    console.log("IN CATEGORY");
+    this.setState({ category: e.target.value });
+  }
+  handleImageChange(e) {
+    //This is hard-coded to a empty string right now because I haven't decided to include images yet
+    this.setState({ image_url: "" });
+  }
+  handleSubmit = () => {
+    let name = this.state.name.trim();
+    let category = this.state.category.trim();
+    let image = 'EmptyImage';
+    if (!name || !category) {
+      return;
+    }
+    API.submitNewChannel({ name: name, category: category, image_url: image });
+    console.log("IN SUBMIT");
+    this.setState({  name: '', category: '', image_url: '', open: false});
+  }
 
   handleClickOpen = () => {
     this.setState({ open: true });
@@ -55,10 +94,6 @@ class AddChannel extends React.Component {
 
   handleClose = () => {
     this.setState({ open: false });
-  };
-
-  handleChange = event => {
-    this.setState({ name: event.target.value });
   };
 
   render() {
@@ -78,13 +113,17 @@ class AddChannel extends React.Component {
               <Typography variant="title" color="inherit" className={classes.flex}>
                 Add Channel
               </Typography>
-              <Button color="inherit" component={Link} to="/admin" onClick={this.handleClose}>
+              <Button color="inherit" component={Link} to="/admin" onClick={this.handleSubmit}>
                 save
               </Button>
             </Toolbar>
           </AppBar>
         <TextField className={classes.field}
+            required
+            label="Channel Name"
             id="channel-name"
+            value={this.state.name}
+            onChange={this.handleChannelNameChange}
             InputLabelProps={{
                 shrink: true,
             }}
@@ -93,18 +132,25 @@ class AddChannel extends React.Component {
             helperText="Name the channel"
             margin="normal"
         />
-        <TextField className={classes.field}
-            id="channel-category"
-            InputLabelProps={{
-                shrink: true,
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="channel-category">Category</InputLabel>
+          <Select
+            required
+            value={this.state.category}
+            onChange={this.handleCategoryChange}
+            inputProps={{
+              name: 'category',
+              id: 'channel-category',
             }}
-            placeholder="Category"
-            className={classes.textField}
-            helperText="eg News"
-            margin="normal"
-            multiline
-            rowsMax="4"
-        />
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {chooseCategories.map(chooseCategory => (
+              <MenuItem key={chooseCategory} value={chooseCategory}>{chooseCategory}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         </Dialog>
       </div>
     );

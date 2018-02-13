@@ -168,7 +168,7 @@ class AddStreamingService extends React.Component {
           margin="normal"
         />
         <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="select-multiple-checkbox">Standard Channels</InputLabel>
+        <InputLabel htmlFor="select-standard-channels">Standard Channels</InputLabel>
           <Select
             multiple
             value={this.state.name}
@@ -186,7 +186,7 @@ class AddStreamingService extends React.Component {
           </Select>
           </FormControl>
           <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="select-multiple-checkbox">Packages</InputLabel>
+        <InputLabel htmlFor="select-packages">Packages</InputLabel>
           <Select
             multiple
             value={this.state.name}

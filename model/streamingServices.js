@@ -1,4 +1,4 @@
-//mode/comments.js
+//model/streamingServices.js
 'use strict';
 //import dependency
 var mongoose = require('mongoose');

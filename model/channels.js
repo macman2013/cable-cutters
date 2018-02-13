@@ -1,4 +1,4 @@
-//mode/comments.js
+//mode1/channels.js
 'use strict';
 //import dependency
 var mongoose = require('mongoose');
