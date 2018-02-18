@@ -24,10 +24,10 @@ import { lighten } from 'material-ui/styles/colorManipulator';
 import API from './API';
 
 let counter = 0;
-function createData(name, category) {
+function createData(name, category, uniqueID) {
   counter += 1;
   //console.log(counter)
-  return { id: counter, name, category };
+  return { id: counter, name, category, uniqueID};
 }
 
 // function createData(array) {
@@ -137,7 +137,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
+  const { numSelected, deleteFunc, classes } = props;
 
   return (
     <Toolbar
@@ -156,7 +156,7 @@ let EnhancedTableToolbar = props => {
       <div className={classes.actions}>
         {numSelected > 0 ? (
           <Tooltip title="Delete">
-            <IconButton aria-label="Delete">
+            <IconButton onClick={deleteFunc} aria-label="Delete">
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -271,7 +271,7 @@ class ChannelTable extends React.Component {
       const channelArray = [];
       for (const i in channels) {
         newChannel = channels[i];
-        addThisChannel = createData(newChannel.name, newChannel.category);
+        addThisChannel = createData(newChannel.name, newChannel.category, newChannel['_id']);
         channelArray.push(addThisChannel)
       }
       this.setState({
@@ -279,6 +279,20 @@ class ChannelTable extends React.Component {
       });
     };
     API.getChannels(onSuccess);
+  }
+
+  deleteSelected = () => {
+    const { selected, data } = this.state;
+    for (const i in selected) {
+      let deleteChan = selected[i];
+      for (const t in data) {
+        let dataChan = data[t];
+        if (dataChan.id == deleteChan) {
+          //console.log(dataChan.uniqueID);
+          API.deleteChannel(dataChan.uniqueID);
+        }
+      }
+    }
   }
 
   componentDidMount() {
@@ -300,7 +314,10 @@ class ChannelTable extends React.Component {
 
     return (
       <div className={classes.tableWrapper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar 
+        numSelected={selected.length} 
+        deleteFunc ={this.deleteSelected}
+        />
         
           <Table className={classes.table}>
             <EnhancedTableHead
