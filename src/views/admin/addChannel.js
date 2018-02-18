@@ -65,11 +65,11 @@ class AddChannel extends React.Component {
     this.handleImageChange = this.handleImageChange.bind(this);
   }
   handleChannelNameChange(e) {
-    console.log("IN NAME");
+    //console.log("IN NAME");
     this.setState({ name: e.target.value });
   }
   handleCategoryChange(e) {
-    console.log("IN CATEGORY");
+    //console.log("IN CATEGORY");
     this.setState({ category: e.target.value });
   }
   handleImageChange(e) {
@@ -84,7 +84,7 @@ class AddChannel extends React.Component {
       return;
     }
     API.submitNewChannel({ name: name, category: category, image_url: image });
-    console.log("IN SUBMIT");
+    //console.log("IN SUBMIT");
     this.setState({  name: '', category: '', image_url: '', open: false});
   }
 

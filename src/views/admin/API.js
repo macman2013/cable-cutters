@@ -4,11 +4,11 @@ import axios from 'axios';
     channelUrl: 'http://localhost:3001/api/channels',
     apiData: [],
   
-    getChannels: function loadChannelsFromServer() {
-        console.log("Getting Channels");
+    getChannels(successCallback) {
+        //console.log("Getting Channels");
         axios.get(this.channelUrl)
           .then(res => {
-            this.apiData = res.data 
+            successCallback(res.data)
           });
     },
 

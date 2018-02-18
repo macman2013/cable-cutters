@@ -26,8 +26,23 @@ import API from './API';
 let counter = 0;
 function createData(name, category) {
   counter += 1;
+  //console.log(counter)
   return { id: counter, name, category };
 }
+
+// function createData(array) {
+//   let newChannel;
+//   let addThisChannel;
+//   const channelArray = [];
+//   for (const i in array) {
+//     counter += 1;
+//     console.log(counter)
+//     newChannel = array[i];
+//     addThisChannel = { id: counter, name: newChannel.name, category: newChannel.category };
+//     channelArray.push(addThisChannel)
+//     }
+//   return channelArray;
+// }
 
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Channel Name' },
@@ -187,7 +202,7 @@ class ChannelTable extends React.Component {
       orderBy: 'name',
       selected: [],
       data: [
-        createData('Cupcake', 'News')
+        
       ].sort((a, b) => (a.name < b.name ? -1 : 1)),
       page: 0,
       rowsPerPage: 5,
@@ -249,13 +264,30 @@ class ChannelTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+  getChannels() {
+    const onSuccess = (channels) => {
+      let newChannel;
+      let addThisChannel;
+      const channelArray = [];
+      for (const i in channels) {
+        newChannel = channels[i];
+        addThisChannel = createData(newChannel.name, newChannel.category);
+        channelArray.push(addThisChannel)
+      }
+      this.setState({
+        data: channelArray,
+      });
+    };
+    API.getChannels(onSuccess);
+  }
+
   componentDidMount() {
-    API.getChannels();
+    this.getChannels();
     if (!this.pollInterval) {
       this.pollInterval = 2000
     } 
   }
-  //this will prevent error messages every 2 seconds once the CommentBox is unmounted
+  //this will prevent error messages every 2 seconds once the ChannelTable is unmounted
   componentWillUnmount() {
   this.pollInterval && clearInterval(this.pollInterval);
   this.pollInterval = null;
