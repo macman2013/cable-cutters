@@ -55,6 +55,7 @@ class SiteNavMenu extends Component {
           <Route exact={true} path="/admin" component={AdminScreen}/>
           <Route exact={true} path="/admin/add" component={AddStreamingService}/>
           <Route path="/admin/addChannel" component={AddChannel}/>
+          <Route path="/admin/:id/edit" component={AddChannel}/>
         </div>
       );
     }

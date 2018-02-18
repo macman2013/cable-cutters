@@ -60,6 +60,7 @@ class AddChannel extends React.Component {
   constructor(props) {
     super(props);
     this.state = { name: '', category: '', image_url: '', open: true };
+    this.title = "";
     this.handleChannelNameChange = this.handleChannelNameChange.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
     this.handleImageChange = this.handleImageChange.bind(this);
@@ -96,6 +97,14 @@ class AddChannel extends React.Component {
     this.setState({ open: false });
   };
 
+  componentWillMount() {
+    if (this.props.match.params.id != null) {
+      this.title = "Edit Channel"
+    } else {
+      this.title = "Add Channel"
+    }
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -111,7 +120,7 @@ class AddChannel extends React.Component {
                 <CloseIcon />
               </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>
-                Add Channel
+                {this.title}
               </Typography>
               <Button color="inherit" component={Link} to="/admin" onClick={this.handleSubmit}>
                 save

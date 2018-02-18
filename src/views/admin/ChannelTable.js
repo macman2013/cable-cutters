@@ -345,7 +345,7 @@ class ChannelTable extends React.Component {
                       <Checkbox checked={isSelected} />
                     </TableCell>
                     <TableCell padding="checkbox">
-                      <IconButton component={Link} to="/admin/addChannel" aria-label="Edit">
+                      <IconButton component={Link} to={'/admin/' + n.uniqueID + '/edit'} aria-label="Edit">
                         <EditIcon />
                       </IconButton>
                     </TableCell>
