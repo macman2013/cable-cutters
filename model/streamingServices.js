@@ -11,6 +11,7 @@ var StreamingSchema = new Schema({
   description: String,
   price: String,
   image_url: String,
+  website: String,
   base_channels: [String],
   channel_packages:[String],
   dvr: Boolean,

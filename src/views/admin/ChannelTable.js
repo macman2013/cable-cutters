@@ -22,6 +22,7 @@ import EditIcon from 'material-ui-icons/Build';
 import AddCircleIcon from 'material-ui-icons/AddCircleOutline';
 import { lighten } from 'material-ui/styles/colorManipulator';
 import API from './API';
+import TextField from 'material-ui/TextField';
 
 let counter = 0;
 function createData(name, category, uniqueID) {
@@ -190,6 +191,11 @@ const styles = theme => ({
   tableWrapper: {
     overflowX: 'auto',
   },
+  textField: {
+    marginLeft: theme.spacing.unit + 20,
+    marginRight: theme.spacing.unit + 20,
+    minWidth: 800,
+  },
 });
 
 class ChannelTable extends React.Component {
@@ -205,7 +211,7 @@ class ChannelTable extends React.Component {
         
       ].sort((a, b) => (a.name < b.name ? -1 : 1)),
       page: 0,
-      rowsPerPage: 5,
+      rowsPerPage: 25,
     };
   }
 
@@ -276,6 +282,7 @@ class ChannelTable extends React.Component {
       }
       this.setState({
         data: channelArray,
+        selected: [],
       });
     };
     API.getChannels(onSuccess);
@@ -301,6 +308,12 @@ class ChannelTable extends React.Component {
       this.pollInterval = 2000
     } 
   }
+
+  componentWillReceiveProps(nextProps) {
+    //console.log("Receiving New Props");
+    this.getChannels();
+  }
+
   //this will prevent error messages every 2 seconds once the ChannelTable is unmounted
   componentWillUnmount() {
   this.pollInterval && clearInterval(this.pollInterval);
@@ -314,6 +327,15 @@ class ChannelTable extends React.Component {
 
     return (
       <div className={classes.tableWrapper}>
+          <TextField
+                id="channel-search"
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                placeholder="Filter Channels"
+                className={classes.textField}
+                margin="normal"
+            />
         <EnhancedTableToolbar 
         numSelected={selected.length} 
         deleteFunc ={this.deleteSelected}
@@ -375,6 +397,7 @@ class ChannelTable extends React.Component {
                   }}
                   onChangePage={this.handleChangePage}
                   onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  rowsPerPageOptions={[5,10,25,50]}
                 />
               </TableRow>
             </TableFooter>

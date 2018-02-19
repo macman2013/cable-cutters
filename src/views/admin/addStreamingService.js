@@ -21,6 +21,7 @@ import Checkbox from 'material-ui/Checkbox';
 import { FormControlLabel, FormGroup } from 'material-ui/Form';
 import Switch from 'material-ui/Switch';
 import green from 'material-ui/colors/green';
+import API from './API';
 
 
 const styles = theme => ({
@@ -66,19 +67,6 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
@@ -86,7 +74,8 @@ function Transition(props) {
 class AddStreamingService extends React.Component {
   state = {
     open: true,
-    name: [],
+    selectedChannels: [],
+    allChannels: [],
   };
 
   handleClickOpen = () => {
@@ -98,8 +87,30 @@ class AddStreamingService extends React.Component {
   };
 
   handleChange = event => {
-    this.setState({ name: event.target.value });
+    this.setState({ selectedChannels: event.target.value });
   };
+
+  getChannels() {
+    const onSuccess = (channels) => {
+      let newChannel;
+      let addThisChannel;
+      const channelArray = [];
+      for (const i in channels) {
+        newChannel = channels[i];
+        addThisChannel = newChannel.name;
+        channelArray.push(addThisChannel);
+      }
+      this.setState({
+        allChannels: channelArray,
+      })
+    };
+    API.getChannels(onSuccess);
+  }
+
+  componentDidMount() {
+    console.log("Mounted")
+    this.getChannels();
+  }
 
   render() {
     const { classes } = this.props;
@@ -147,6 +158,16 @@ class AddStreamingService extends React.Component {
             rowsMax="4"
         />
         <TextField
+          id="service-website"
+          placeholder="Website"
+          helperText="eg. http://dalekeithapps.com"
+          className={classes.textField}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          margin="normal"
+        />
+        <TextField
           id="base-price"
           label="Starting Price"
           type="number"
@@ -171,16 +192,16 @@ class AddStreamingService extends React.Component {
         <InputLabel htmlFor="select-standard-channels">Standard Channels</InputLabel>
           <Select
             multiple
-            value={this.state.name}
+            value={this.state.selectedChannels}
             onChange={this.handleChange}
             input={<Input id="select-standard-channels" />}
             renderValue={selected => selected.join(', ')}
             MenuProps={MenuProps}
           >
-            {names.map(name => (
-              <MenuItem key={name} value={name}>
-                <Checkbox checked={this.state.name.indexOf(name) > -1} />
-                <ListItemText primary={name} />
+            {this.state.allChannels.map(eachChannel => (
+              <MenuItem key={eachChannel} value={eachChannel}>
+                <Checkbox checked={this.state.selectedChannels.indexOf(eachChannel) > -1} />
+                <ListItemText primary={eachChannel} />
               </MenuItem>
             ))}
           </Select>
@@ -189,16 +210,16 @@ class AddStreamingService extends React.Component {
         <InputLabel htmlFor="select-packages">Packages</InputLabel>
           <Select
             multiple
-            value={this.state.name}
+            value={this.state.selectedChannels}
             onChange={this.handleChange}
             input={<Input id="select-packages" />}
             renderValue={selected => selected.join(', ')}
             MenuProps={MenuProps}
           >
-            {names.map(name => (
-              <MenuItem key={name} value={name}>
-                <Checkbox checked={this.state.name.indexOf(name) > -1} />
-                <ListItemText primary={name} />
+            {this.state.allChannels.map(eachChannel => (
+              <MenuItem key={eachChannel} value={eachChannel}>
+                <Checkbox checked={this.state.selectedChannels.indexOf(eachChannel) > -1} />
+                <ListItemText primary={eachChannel} />
               </MenuItem>
             ))}
           </Select>
