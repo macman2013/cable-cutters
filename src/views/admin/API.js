@@ -25,7 +25,7 @@ import axios from 'axios';
       },
 
       updateChannel: function handleUpdate(id, channel) {
-        //sends the channel id and new author/text to our api
+        //sends the channel id and new name/category to our api
         axios.put(`${this.channelUrl}/${id}`, channel)
           .catch(err => {
             console.log(err);

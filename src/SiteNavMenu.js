@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link, Route, Switch, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
@@ -52,7 +52,7 @@ class SiteNavMenu extends Component {
           <Route exact={true} path="/channels" component={MyChannels}/>
           <Route exact={true} path="/shows" component={MyShows}/>
           <Route exact={true} path="/about" component={About}/>
-          <Route exact={true} path="/admin" component={AdminScreen}/>
+          <Route path='/admin' component={AdminScreen}/>
           <Route exact={true} path="/admin/add" component={AddStreamingService}/>
           <Route path="/admin/addChannel" component={AddChannel}/>
           <Route path="/admin/:id/edit" component={AddChannel}/>

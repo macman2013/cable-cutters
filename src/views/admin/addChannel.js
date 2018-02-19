@@ -1,11 +1,9 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
@@ -13,9 +11,8 @@ import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import TextField from 'material-ui/TextField';
-import Input, { InputLabel } from 'material-ui/Input';
+import { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
-import { FormControlLabel, FormGroup } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
 import API from './API.js';
@@ -59,8 +56,7 @@ function Transition(props) {
 class AddChannel extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { name: '', category: '', image_url: '', open: true };
-    this.title = "";
+    this.state = { name: '', category: '', image_url: '', open: true, title: 'Add Channel'};
     this.handleChannelNameChange = this.handleChannelNameChange.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
     this.handleImageChange = this.handleImageChange.bind(this);
@@ -78,15 +74,27 @@ class AddChannel extends React.Component {
     this.setState({ image_url: "" });
   }
   handleSubmit = () => {
-    let name = this.state.name.trim();
-    let category = this.state.category.trim();
-    let image = 'EmptyImage';
-    if (!name || !category) {
-      return;
+    if (this.props.match.params.id == null) {
+      let name = this.state.name.trim();
+      let category = this.state.category.trim();
+      let image = 'EmptyImage';
+      if (!name || !category) {
+        return;
+      }
+      API.submitNewChannel({ name: name, category: category, image_url: image });
+      //console.log("IN SUBMIT");
+      this.setState({  name: '', category: '', image_url: '', open: false});
+    } else {
+      //console.log("Editing!")
+      const {selectedName, selectedCat} = this.props.location.state;
+      let editingID = this.props.match.params.id;
+      let name = (selectedName !== this.state.name) ? this.state.name : null;
+      let category = (selectedCat !== this.state.category) ? this.state.category : null;
+      //Image will never be changed from original value because images are not supported right now, so this is always null.
+      let image = null;
+      let updatedChannel = {name: name, category: category, image_url: image};
+      API.updateChannel(editingID, updatedChannel);
     }
-    API.submitNewChannel({ name: name, category: category, image_url: image });
-    //console.log("IN SUBMIT");
-    this.setState({  name: '', category: '', image_url: '', open: false});
   }
 
   handleClickOpen = () => {
@@ -99,9 +107,10 @@ class AddChannel extends React.Component {
 
   componentWillMount() {
     if (this.props.match.params.id != null) {
-      this.title = "Edit Channel"
-    } else {
-      this.title = "Add Channel"
+      const {selectedName, selectedCat} = this.props.location.state;
+      //console.log("Selected Name for Editing " + selectedName);
+      //console.log("Selected Category for Editing " + selectedCat);
+      this.setState({name: selectedName, category: selectedCat, title: 'Edit Channel'});
     }
   }
 
@@ -120,9 +129,9 @@ class AddChannel extends React.Component {
                 <CloseIcon />
               </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>
-                {this.title}
+                {this.state.title}
               </Typography>
-              <Button color="inherit" component={Link} to="/admin" onClick={this.handleSubmit}>
+              <Button color="inherit" component={Link} to="/admin" onClick={this.handleSubmit}  aria-label="Close">
                 save
               </Button>
             </Toolbar>

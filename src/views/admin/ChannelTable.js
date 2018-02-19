@@ -287,7 +287,7 @@ class ChannelTable extends React.Component {
       let deleteChan = selected[i];
       for (const t in data) {
         let dataChan = data[t];
-        if (dataChan.id == deleteChan) {
+        if (dataChan.id === deleteChan) {
           //console.log(dataChan.uniqueID);
           API.deleteChannel(dataChan.uniqueID);
         }
@@ -345,7 +345,7 @@ class ChannelTable extends React.Component {
                       <Checkbox checked={isSelected} />
                     </TableCell>
                     <TableCell padding="checkbox">
-                      <IconButton component={Link} to={'/admin/' + n.uniqueID + '/edit'} aria-label="Edit">
+                      <IconButton component={Link} to={{pathname: '/admin/' + n.uniqueID + '/edit', state: {selectedName: n.name, selectedCat: n.category}}} aria-label="Edit">
                         <EditIcon />
                       </IconButton>
                     </TableCell>
