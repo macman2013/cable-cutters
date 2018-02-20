@@ -9,7 +9,7 @@ var Schema = mongoose.Schema;
 var addOnSchema = new Schema({
   addonName: String,
   forService: String,
-  price: String,
+  price: Number,
   channels: [String],
   dvr: Boolean,
   devicesNum: String

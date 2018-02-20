@@ -15,6 +15,7 @@ import MyShows from './views/myShows';
 import AdminScreen from './views/admin/adminScreen'
 import AddStreamingService from './views/admin/addStreamingService';
 import AddChannel from './views/admin/addChannel';
+import AddAddOn from './views/admin/addAddOn';
 
 const styles = {
   root: {
@@ -55,7 +56,9 @@ class SiteNavMenu extends Component {
           <Route exact={true} path='/admin' component={AdminScreen}/>
           <Route exact={true} path="/admin/add" component={AddStreamingService}/>
           <Route path="/admin/addChannel" component={AddChannel}/>
-          <Route path="/admin/:id/edit" component={AddChannel}/>
+          <Route path="/admin/createAddon" component={AddAddOn}/>
+          <Route path="/admin/:id/editChannel" component={AddChannel}/>
+          <Route path="/admin/:id/editAddon" component={AddAddOn}/>
         </div>
       );
     }

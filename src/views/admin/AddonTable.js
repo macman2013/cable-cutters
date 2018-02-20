@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import { Link, Route, Switch } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
 import Table, {
   TableBody,
@@ -17,21 +18,26 @@ import Checkbox from 'material-ui/Checkbox';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import DeleteIcon from 'material-ui-icons/Delete';
+import EditIcon from 'material-ui-icons/Build';
 import AddCircleIcon from 'material-ui-icons/AddCircleOutline';
 import { lighten } from 'material-ui/styles/colorManipulator';
+import API from './API';
+import TextField from 'material-ui/TextField';
 
 let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
+function createData(name, service, price, channels, dvr, num, uniqueID) {
   counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
+  //console.log(counter)
+  return { id: counter, name, service, price, channels, dvr, num, uniqueID};
 }
 
 const columnData = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Add-on Name' },
+  { id: 'service', numeric: false, disablePadding: true, label: 'Service' },
+  { id: 'price', numeric: true, disablePadding: false, label: 'Price' },
+  { id: 'channels', numeric: false, disablePadding: false, label: 'Channels' },
+  { id: 'dvr', numeric: false, disablePadding: false, label: 'DVR' },
+  { id: 'num', numeric: false, disablePadding: false, label: 'Number of Devices' },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -51,6 +57,11 @@ class EnhancedTableHead extends React.Component {
               checked={numSelected === rowCount}
               onChange={onSelectAllClick}
             />
+          </TableCell>
+          <TableCell padding="checkbox">
+          <IconButton disabled aria-label="Edit">
+            <EditIcon />
+          </IconButton>
           </TableCell>
           {columnData.map(column => {
             return (
@@ -117,7 +128,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
+  const { numSelected, deleteFunc, classes } = props;
 
   return (
     <Toolbar
@@ -136,13 +147,13 @@ let EnhancedTableToolbar = props => {
       <div className={classes.actions}>
         {numSelected > 0 ? (
           <Tooltip title="Delete">
-            <IconButton aria-label="Delete">
+            <IconButton onClick={deleteFunc} aria-label="Delete">
               <DeleteIcon />
             </IconButton>
           </Tooltip>
         ) : (
-          <Tooltip title="Add Add-on/Extra Feature">
-            <IconButton aria-label="add Addons">
+          <Tooltip title="Add Add-on">
+            <IconButton component={Link} to="/admin/createAddon" aria-label="add addon">
               <AddCircleIcon />
             </IconButton>
           </Tooltip>
@@ -170,31 +181,27 @@ const styles = theme => ({
   tableWrapper: {
     overflowX: 'auto',
   },
+  textField: {
+    marginLeft: theme.spacing.unit + 20,
+    marginRight: theme.spacing.unit + 20,
+    minWidth: 800,
+  },
 });
 
 class AddonsTable extends React.Component {
   constructor(props, context) {
     super(props, context);
+    this.pollInterval = null;
 
     this.state = {
       order: 'asc',
-      orderBy: 'calories',
+      orderBy: 'name',
       selected: [],
       data: [
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Donut', 452, 25.0, 51, 4.9),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
-        createData('Honeycomb', 408, 3.2, 87, 6.5),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Jelly Bean', 375, 0.0, 94, 0.0),
-        createData('KitKat', 518, 26.0, 65, 7.0),
-        createData('Lollipop', 392, 0.2, 98, 0.0),
-        createData('Marshmallow', 318, 0, 81, 2.0),
-        createData('Nougat', 360, 19.0, 9, 37.0),
-        createData('Oreo', 437, 18.0, 63, 4.0),
-      ].sort((a, b) => (a.calories < b.calories ? -1 : 1)),
+        
+      ].sort((a, b) => (a.name < b.name ? -1 : 1)),
+      filteredAddons: [],
+      originaldata: [],
       page: 0,
       rowsPerPage: 5,
     };
@@ -255,6 +262,90 @@ class AddonsTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+  getAddons() {
+    const onSuccess = (channels) => {
+      let newAddon;
+      let addThisAddon;
+      let addAddonName;
+      const addonArray = [];
+      const addonNames = [];
+      for (const i in channels) {
+        newAddon = channels[i];
+        addThisAddon = createData(newAddon.addonName, newAddon.forService, newAddon.price, newAddon.channels, newAddon.dvr, newAddon.devicesNum, newAddon['_id']);
+        addAddonName = (newAddon.addonName).toLowerCase();
+        addonArray.push(addThisAddon);
+        addonNames.push(addAddonName);
+      }
+      this.setState({
+        data: addonArray,
+        originaldata: addonArray,
+        selected: [],
+        filteredAddons: addonNames
+      });
+    };
+    API.getAddons(onSuccess);
+  }
+
+  deleteSelected = () => {
+    const { selected, data } = this.state;
+    for (const i in selected) {
+      let deleteChan = selected[i];
+      for (const t in data) {
+        let dataChan = data[t];
+        if (dataChan.id === deleteChan) {
+          //console.log(dataChan.uniqueID);
+          API.deleteAddOn(dataChan.uniqueID);
+        }
+      }
+    }
+  }
+  
+  filterAddons = event => {
+    //event.preventDefault();
+    let filteredRows = [];
+    //console.log(event.target.value)
+    var lowerInput = (event.target.value).toLowerCase();
+    let searchCriteria = this.state.filteredAddons.filter(s => s.includes(lowerInput));
+    //console.log("Names that should be here " + searchCriteria)
+    let beforeFilter = this.state.originaldata;
+    //console.log("Add-ons Beginning" + beforeFilter.length)
+    //console.log("Filtered Rows Before Either Loop" + filteredRows.length)
+    for (const i in beforeFilter) {
+      let eachRow = beforeFilter[i];
+      let rowName = eachRow.name;
+      var lowerRowName = rowName.toLowerCase();
+      //console.log(lowerRowName)
+      for (const t in searchCriteria) {
+        var lowerSearchCriteria = searchCriteria[t].toLowerCase();
+        //console.log(lowerSearchCriteria)
+        if (lowerRowName.includes(lowerSearchCriteria)) {
+          filteredRows.push(eachRow);
+        }
+      }
+    }
+    let unique = [...new Set(filteredRows)]
+    //console.log(unique)
+    this.setState({data:unique}) 
+  }
+
+  componentDidMount() {
+    this.getAddons();
+    if (!this.pollInterval) {
+      this.pollInterval = 2000
+    } 
+  }
+
+  componentWillReceiveProps(nextProps) {
+    //console.log("Receiving New Props");
+    this.getAddons();
+  }
+
+  //this will prevent error messages every 2 seconds once the ChannelTable is unmounted
+  componentWillUnmount() {
+  this.pollInterval && clearInterval(this.pollInterval);
+  this.pollInterval = null;
+  }
+
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
@@ -262,7 +353,20 @@ class AddonsTable extends React.Component {
 
     return (
       <div className={classes.tableWrapper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+          <TextField
+                id="addon-search"
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                placeholder="Filter Add-ons by name"
+                className={classes.textField}
+                onChange={this.filterAddons}
+                margin="normal"
+            />
+        <EnhancedTableToolbar 
+        numSelected={selected.length} 
+        deleteFunc ={this.deleteSelected}
+        />
         
           <Table className={classes.table}>
             <EnhancedTableHead
@@ -289,11 +393,17 @@ class AddonsTable extends React.Component {
                     <TableCell padding="checkbox">
                       <Checkbox checked={isSelected} />
                     </TableCell>
+                    <TableCell padding="checkbox">
+                      <IconButton component={Link} to={{pathname: '/admin/' + n.uniqueID + '/editAddon', state: {selectedName: n.name, selectedCat: n.category}}} aria-label="Edit">
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
                     <TableCell padding="none">{n.name}</TableCell>
-                    <TableCell numeric>{n.calories}</TableCell>
-                    <TableCell numeric>{n.fat}</TableCell>
-                    <TableCell numeric>{n.carbs}</TableCell>
-                    <TableCell numeric>{n.protein}</TableCell>
+                    <TableCell padding="none">{n.service}</TableCell>
+                    <TableCell padding="none">{n.price}</TableCell>
+                    <TableCell padding="none">{n.channels}</TableCell>
+                    <TableCell padding="none">{n.dvr}</TableCell>
+                    <TableCell padding="none">{n.num}</TableCell>
                   </TableRow>
                 );
               })}

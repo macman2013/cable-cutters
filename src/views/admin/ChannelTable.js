@@ -404,7 +404,7 @@ class ChannelTable extends React.Component {
                       <Checkbox checked={isSelected} />
                     </TableCell>
                     <TableCell padding="checkbox">
-                      <IconButton component={Link} to={{pathname: '/admin/' + n.uniqueID + '/edit', state: {selectedName: n.name, selectedCat: n.category}}} aria-label="Edit">
+                      <IconButton component={Link} to={{pathname: '/admin/' + n.uniqueID + '/editChannel', state: {selectedName: n.name, selectedCat: n.category}}} aria-label="Edit">
                         <EditIcon />
                       </IconButton>
                     </TableCell>
