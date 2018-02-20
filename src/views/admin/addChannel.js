@@ -46,7 +46,8 @@ const chooseCategories = [
   'Movies',
   'News',
   'Sports',
-  'Premium'
+  'Premium',
+  'Spanish & International'
 ]
 
 function Transition(props) {

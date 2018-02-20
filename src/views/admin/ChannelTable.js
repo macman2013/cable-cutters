@@ -210,6 +210,8 @@ class ChannelTable extends React.Component {
       data: [
         
       ].sort((a, b) => (a.name < b.name ? -1 : 1)),
+      filteredChannels: [],
+      originaldata: [],
       page: 0,
       rowsPerPage: 25,
     };
@@ -274,15 +276,21 @@ class ChannelTable extends React.Component {
     const onSuccess = (channels) => {
       let newChannel;
       let addThisChannel;
+      let addChannelName;
       const channelArray = [];
+      const channelNames = [];
       for (const i in channels) {
         newChannel = channels[i];
         addThisChannel = createData(newChannel.name, newChannel.category, newChannel['_id']);
-        channelArray.push(addThisChannel)
+        addChannelName = (newChannel.name).toLowerCase();
+        channelArray.push(addThisChannel);
+        channelNames.push(addChannelName);
       }
       this.setState({
         data: channelArray,
+        originaldata: channelArray,
         selected: [],
+        filteredChannels: channelNames
       });
     };
     API.getChannels(onSuccess);
@@ -300,6 +308,34 @@ class ChannelTable extends React.Component {
         }
       }
     }
+  }
+  
+  filterChannels = event => {
+    //event.preventDefault();
+    let filteredRows = [];
+    //console.log(event.target.value)
+    var lowerInput = (event.target.value).toLowerCase();
+    let searchCriteria = this.state.filteredChannels.filter(s => s.includes(lowerInput));
+    //console.log("Names that should be here " + searchCriteria)
+    let beforeFilter = this.state.originaldata;
+    //console.log("Channels Beginning" + beforeFilter.length)
+    //console.log("Filtered Rows Before Either Loop" + filteredRows.length)
+    for (const i in beforeFilter) {
+      let eachRow = beforeFilter[i];
+      let rowName = eachRow.name;
+      var lowerRowName = rowName.toLowerCase();
+      //console.log(lowerRowName)
+      for (const t in searchCriteria) {
+        var lowerSearchCriteria = searchCriteria[t].toLowerCase();
+        //console.log(lowerSearchCriteria)
+        if (lowerRowName.includes(lowerSearchCriteria)) {
+          filteredRows.push(eachRow);
+        }
+      }
+    }
+    let unique = [...new Set(filteredRows)]
+    //console.log(unique)
+    this.setState({data:unique}) 
   }
 
   componentDidMount() {
@@ -332,8 +368,9 @@ class ChannelTable extends React.Component {
                 InputLabelProps={{
                     shrink: true,
                 }}
-                placeholder="Filter Channels"
+                placeholder="Filter Channels by name"
                 className={classes.textField}
+                onChange={this.filterChannels}
                 margin="normal"
             />
         <EnhancedTableToolbar 
