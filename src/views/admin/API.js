@@ -1,10 +1,49 @@
 import axios from 'axios';
 
   var API = {
+    streamingUrl: 'http://localhost:3001/api/services',
     channelUrl: 'http://localhost:3001/api/channels',
     addonUrl: 'http://localhost:3001/api/addons',
     apiData: [],
   
+  getServices(successCallback) {
+      //console.log("Getting Services");
+      axios.get(this.streamingUrl)
+        .then(res => {
+          successCallback(res.data)
+        });
+  },
+
+  submitNewService: function handleSubmit(service) {
+      let services = this.apiData;
+      service.id = Date.now();
+      let newServices = services.concat([service]);
+      this.apiData = newServices;
+      axios.post(this.streamingUrl, service)
+        .catch(err => {
+          console.error(err);
+          this.apiData = services;
+        });
+    },
+
+    updateService: function handleUpdate(id, service) {
+      //sends the service id and new name/category to our api
+      axios.put(`${this.streamingUrl}/${id}`, service)
+        .catch(err => {
+          console.log(err);
+        })
+    },
+
+    deleteService: function handleDelete(id) {
+      axios.delete(`${this.streamingUrl}/${id}`)
+        .then(res => {
+          console.log('Service deleted');
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    },
+
     getChannels(successCallback) {
         //console.log("Getting Channels");
         axios.get(this.channelUrl)

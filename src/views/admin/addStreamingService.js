@@ -41,7 +41,7 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit + 20,
     marginRight: theme.spacing.unit + 20,
-    width: 600,
+    minWidth: 500,
   },
   switch: {
     marginLeft: theme.spacing.unit + 20,
@@ -74,7 +74,15 @@ function Transition(props) {
 class AddStreamingService extends React.Component {
   state = {
     open: true,
-    selectedChannels: [],
+    name: '',
+    description: '',
+    price: '',
+    image_url: '',
+    website: '',
+    base_channels: [],
+    channel_packages: [],
+    dvr: false,
+    numberOfDevices: '',
     allChannels: [],
   };
 
@@ -87,8 +95,76 @@ class AddStreamingService extends React.Component {
   };
 
   handleChange = event => {
-    this.setState({ selectedChannels: event.target.value });
+    this.setState({ base_channels: event.target.value });
   };
+
+  handleServiceName = event => {
+    this.setState({ name: event.target.value });
+  };
+
+  handleServiceDesc = event => {
+    this.setState({ description: event.target.value });
+  };
+
+  handleServicePrice = event => {
+    this.setState({ price: event.target.value });
+  };
+
+  handleServiceImage = event => {
+    this.setState({ image_url: "" });
+  };
+
+  handleServiceWebsite = event => {
+    this.setState({ website: event.target.value });
+  };
+
+  handleServicePackages = event => {
+    this.setState({ channel_packages: event.target.value });
+  };
+
+  handleServiceDvr = event => {
+    this.setState({ dvr: event.target.checked });
+  };
+
+  handleServiceNumDevices = event => {
+    this.setState({ numberOfDevices: event.target.value });
+  };
+
+  handleSubmit = event => {
+    if (this.props.match.params.id == null) {
+      let name = this.state.name.trim();
+      let description = this.state.description.trim();
+      let price = this.state.price.trim();
+      let image = 'EmptyImage';
+      let website = this.state.website.trim();
+      let standardChannels = this.state.base_channels;
+      let standardPackages = this.state.channel_packages;
+      let dvr = this.state.dvr;
+      let numberOfDevices = this.state.numberOfDevices.trim();
+      if (!name || !description || !website) {
+        return;
+      }
+      API.submitNewService({ name: name, description: description, price: price, image_url: image, website: website, base_channels: standardChannels, channel_packages: standardPackages, dvr: dvr, numberOfDevices: numberOfDevices });
+      //console.log("IN SUBMIT");
+      this.setState({  name: '', description: '', price: '', image_url: '', website: '', base_channels: [], channel_packages: [], dvr: false, numberOfDevices: '', open: false});
+    } else {
+      //console.log("Editing!")
+      const {selectedName, selectedDesc, selectedPrice, selectedWeb, selectedStandard, selectedPackages, selectedDvr, selectedNumDev} = this.props.location.state;
+      let editingID = this.props.match.params.id;
+      let name = (selectedName !== this.state.name) ? this.state.name : null;
+      let description = (selectedDesc !== this.state.description) ? this.state.description : null;
+      let price = (selectedPrice !== this.state.price) ? this.state.price : null;
+      //Image will never be changed from original value because images are not supported right now, so this is always null.
+      let image = null;
+      let website = (selectedWeb !== this.state.website) ? this.state.website : null;
+      let standardChannels = (selectedStandard !== this.state.base_channels) ? this.state.base_channels : null;
+      let standardPackages = (selectedPackages !== this.state.channel_packages) ? this.state.channel_packages : null;
+      let dvr = (selectedDvr !== this.state.dvr) ? this.state.dvr : null;
+      let numberOfDevices = (selectedNumDev !== this.state.numberOfDevices) ? this.state.numberOfDevices : null;
+      let updatedService = {name: name, description: description, price: price, image_url: image, website: website, base_channels: standardChannels, channel_packages: standardPackages, dvr: dvr, numberOfDevices: numberOfDevices};
+      API.updateService(editingID, updatedService);
+    }
+  }
 
   getChannels() {
     const onSuccess = (channels) => {
@@ -108,8 +184,12 @@ class AddStreamingService extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Mounted")
+    //console.log("Mounted")
     this.getChannels();
+    if (this.props.match.params.id != null) {
+      const {selectedName, selectedDesc, selectedPrice, selectedWeb, selectedStandard, selectedPackages, selectedDvr, selectedNumDev} = this.props.location.state;
+      this.setState({name: selectedName, description: selectedDesc, price: selectedPrice, website: selectedWeb, base_channels: selectedStandard, channel_packages: selectedPackages, dvr: selectedDvr, numberOfDevices: selectedNumDev, title: 'Edit Streaming Service'});
+    }
   }
 
   render() {
@@ -117,7 +197,6 @@ class AddStreamingService extends React.Component {
     return (
       <div>
         <Dialog
-          fullScreen
           open={this.state.open}
           onClose={this.handleClose}
           transition={Transition}
@@ -130,27 +209,33 @@ class AddStreamingService extends React.Component {
               <Typography variant="title" color="inherit" className={classes.flex}>
                 Add Streaming Service
               </Typography>
-              <Button color="inherit" component={Link} to="/admin" onClick={this.handleClose}>
+              <Button color="inherit" component={Link} to="/admin" onClick={this.handleSubmit}>
                 save
               </Button>
             </Toolbar>
           </AppBar>
         <TextField className={classes.field}
+            required
             id="service-name"
             InputLabelProps={{
                 shrink: true,
             }}
             placeholder="Name"
+            value={this.state.name}
+            onChange={this.handleServiceName}
             className={classes.textField}
             helperText="Name the streaming service"
             margin="normal"
         />
         <TextField className={classes.field}
+            required
             id="service-desc"
             InputLabelProps={{
                 shrink: true,
             }}
             placeholder="Description"
+            value={this.state.description}
+            onChange={this.handleServiceDesc}
             className={classes.textField}
             helperText="Describe the streaming service (unique features etc)"
             margin="normal"
@@ -158,8 +243,11 @@ class AddStreamingService extends React.Component {
             rowsMax="4"
         />
         <TextField
+          required
           id="service-website"
           placeholder="Website"
+          value={this.state.website}
+          onChange={this.handleServiceWebsite}
           helperText="eg. http://dalekeithapps.com"
           className={classes.textField}
           InputLabelProps={{
@@ -169,9 +257,11 @@ class AddStreamingService extends React.Component {
         />
         <TextField
           id="base-price"
+          placeholder="Base service price (may be lowest package price)"
+          value={this.state.price}
+          onChange={this.handleServicePrice}
           label="Starting Price"
-          type="number"
-          helperText="eg. 39.99"
+          helperText="eg. 39.99 or Starting at $20/month"
           className={classes.textField}
           InputLabelProps={{
             shrink: true,
@@ -181,6 +271,8 @@ class AddStreamingService extends React.Component {
         <TextField
           id="num-devices"
           placeholder="Number of Devices"
+          value={this.state.numberOfDevices}
+          onChange={this.handleServiceNumDevices}
           helperText="eg. 2, Unlimited"
           className={classes.textField}
           InputLabelProps={{
@@ -192,7 +284,7 @@ class AddStreamingService extends React.Component {
         <InputLabel htmlFor="select-standard-channels">Standard Channels</InputLabel>
           <Select
             multiple
-            value={this.state.selectedChannels}
+            value={this.state.base_channels}
             onChange={this.handleChange}
             input={<Input id="select-standard-channels" />}
             renderValue={selected => selected.join(', ')}
@@ -200,7 +292,7 @@ class AddStreamingService extends React.Component {
           >
             {this.state.allChannels.map(eachChannel => (
               <MenuItem key={eachChannel} value={eachChannel}>
-                <Checkbox checked={this.state.selectedChannels.indexOf(eachChannel) > -1} />
+                <Checkbox checked={this.state.base_channels.indexOf(eachChannel) > -1} />
                 <ListItemText primary={eachChannel} />
               </MenuItem>
             ))}
@@ -210,15 +302,15 @@ class AddStreamingService extends React.Component {
         <InputLabel htmlFor="select-packages">Packages</InputLabel>
           <Select
             multiple
-            value={this.state.selectedChannels}
-            onChange={this.handleChange}
+            value={this.state.channel_packages}
+            onChange={this.handleServicePackages}
             input={<Input id="select-packages" />}
             renderValue={selected => selected.join(', ')}
             MenuProps={MenuProps}
           >
             {this.state.allChannels.map(eachChannel => (
               <MenuItem key={eachChannel} value={eachChannel}>
-                <Checkbox checked={this.state.selectedChannels.indexOf(eachChannel) > -1} />
+                <Checkbox checked={this.state.channel_packages.indexOf(eachChannel) > -1} />
                 <ListItemText primary={eachChannel} />
               </MenuItem>
             ))}
@@ -231,8 +323,8 @@ class AddStreamingService extends React.Component {
                 checked: classes.checked,
                 bar: classes.bar,
                 }}
-              checked={this.state.checkedB}
-              onChange={(event, checked) => this.setState({ checkedB: checked })}
+              checked={this.state.dvr}
+              onChange={this.handleServiceDvr}
             />
           }
           label="DVR Feature Included?"

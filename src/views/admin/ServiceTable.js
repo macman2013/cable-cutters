@@ -22,19 +22,20 @@ import EditIcon from 'material-ui-icons/Build';
 import AddCircleIcon from 'material-ui-icons/AddCircleOutline';
 import AddStreamingService from './addStreamingService';
 import { lighten } from 'material-ui/styles/colorManipulator';
+import API from './API'
 
 let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
+function createData(name, description, price, image, website, channels, packages, dvr, devices, uniqueID) {
   counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
+  return { id: counter, name, description, price, image, website, channels, packages, dvr, devices, uniqueID };
 }
 
 const columnData = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+  { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
+  { id: 'description', numeric: false, disablePadding: false, label: 'Description' },
+  { id: 'price', numeric: false, disablePadding: false, label: 'Base Price' },
+  { id: 'base_channels', numeric: false, disablePadding: false, label: 'Base Channels' },
+  { id: 'channel_packages', numeric: false, disablePadding: false, label: 'Availiable Packages' },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -125,7 +126,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
+  const { numSelected, classes, deleteFunc } = props;
 
   return (
     <Toolbar
@@ -144,7 +145,7 @@ let EnhancedTableToolbar = props => {
       <div className={classes.actions}>
         {numSelected > 0 ? (
           <Tooltip title="Delete">
-            <IconButton aria-label="Delete">
+            <IconButton onClick={deleteFunc} aria-label="Delete">
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -186,23 +187,13 @@ class ServiceTable extends React.Component {
 
     this.state = {
       order: 'asc',
-      orderBy: 'calories',
+      orderBy: 'name',
       selected: [],
       data: [
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Donut', 452, 25.0, 51, 4.9),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
-        createData('Honeycomb', 408, 3.2, 87, 6.5),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Jelly Bean', 375, 0.0, 94, 0.0),
-        createData('KitKat', 518, 26.0, 65, 7.0),
-        createData('Lollipop', 392, 0.2, 98, 0.0),
-        createData('Marshmallow', 318, 0, 81, 2.0),
-        createData('Nougat', 360, 19.0, 9, 37.0),
-        createData('Oreo', 437, 18.0, 63, 4.0),
+
       ].sort((a, b) => (a.calories < b.calories ? -1 : 1)),
+      filteredServices: [],
+      originaldata: [],
       page: 0,
       rowsPerPage: 5,
     };
@@ -263,6 +254,79 @@ class ServiceTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+  getServices() {
+    const onSuccess = (services) => {
+      let newService;
+      let addThisService;
+      let addServiceName;
+      const serviceArray = [];
+      const serviceNames = [];
+      for (const i in services) {
+        newService = services[i];
+        addThisService = createData(newService.name, newService.description, newService.price, newService.image_url, newService.website, newService.base_channels, newService.channel_packages, newService.dvr, newService.numberOfDevices, newService['_id']);
+        addServiceName = (newService.name).toLowerCase();
+        serviceArray.push(addThisService);
+        serviceNames.push(addServiceName);
+      }
+      this.setState({
+        data: serviceArray,
+        originaldata: serviceArray,
+        selected: [],
+        filteredServices: serviceNames
+      });
+    };
+    API.getServices(onSuccess);
+  }
+
+  deleteSelected = () => {
+    const { selected, data } = this.state;
+    for (const i in selected) {
+      let deleteServ = selected[i];
+      for (const t in data) {
+        let dataServ = data[t];
+        if (dataServ.id === deleteServ) {
+          //console.log(dataServ.uniqueID);
+          API.deleteService(dataServ.uniqueID);
+        }
+      }
+    }
+  }
+  
+  filterServices = event => {
+    //event.preventDefault();
+    let filteredRows = [];
+    //console.log(event.target.value)
+    var lowerInput = (event.target.value).toLowerCase();
+    let searchCriteria = this.state.filteredServices.filter(s => s.includes(lowerInput));
+    //console.log("Names that should be here " + searchCriteria)
+    let beforeFilter = this.state.originaldata;
+    //console.log("Services Beginning" + beforeFilter.length)
+    //console.log("Filtered Rows Before Either Loop" + filteredRows.length)
+    for (const i in beforeFilter) {
+      let eachRow = beforeFilter[i];
+      let rowName = eachRow.name;
+      var lowerRowName = rowName.toLowerCase();
+      //console.log(lowerRowName)
+      for (const t in searchCriteria) {
+        var lowerSearchCriteria = searchCriteria[t].toLowerCase();
+        //console.log(lowerSearchCriteria)
+        if (lowerRowName.includes(lowerSearchCriteria)) {
+          filteredRows.push(eachRow);
+        }
+      }
+    }
+    let unique = [...new Set(filteredRows)]
+    //console.log(unique)
+    this.setState({data:unique}) 
+  }
+
+  componentDidMount() {
+    this.getServices();
+    if (!this.pollInterval) {
+      this.pollInterval = 2000
+    } 
+  }
+
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
@@ -270,7 +334,10 @@ class ServiceTable extends React.Component {
 
     return (
       <div className={classes.tableWrapper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar 
+        numSelected={selected.length}
+        deleteFunc ={this.deleteSelected}
+        />
         
           <Table className={classes.table}>
             <EnhancedTableHead
@@ -298,15 +365,15 @@ class ServiceTable extends React.Component {
                       <Checkbox checked={isSelected} />
                     </TableCell>
                     <TableCell padding="checkbox">
-                      <IconButton component={Link} to="/admin/add" aria-label="Edit">
+                      <IconButton component={Link} to={{pathname: '/admin/' + n.uniqueID + '/editService', state: {selectedName: n.name, selectedDesc: n.description, selectedPrice: n.price, selectedWeb: n.website, selectedStandard: n.channels, selectedPackages: n.packages, selectedDvr: n.dvr, selectedNumDev: n.devices}}} aria-label="Edit">
                         <EditIcon />
                       </IconButton>
                     </TableCell>
-                    <TableCell padding="none">{n.name}</TableCell>
-                    <TableCell numeric>{n.calories}</TableCell>
-                    <TableCell numeric>{n.fat}</TableCell>
-                    <TableCell numeric>{n.carbs}</TableCell>
-                    <TableCell numeric>{n.protein}</TableCell>
+                    <TableCell>{n.name}</TableCell>
+                    <TableCell>{n.description}</TableCell>
+                    <TableCell>{n.price}</TableCell>
+                    <TableCell>{n.channels + ""}</TableCell>
+                    <TableCell>{n.packages}</TableCell>
                   </TableRow>
                 );
               })}

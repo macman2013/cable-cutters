@@ -8,6 +8,7 @@ var Schema = mongoose.Schema;
 //the shape of your database entries.
 var addOnSchema = new Schema({
   addonName: String,
+  description: String,
   forService: String,
   price: Number,
   channels: [String],

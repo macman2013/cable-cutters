@@ -25,19 +25,18 @@ import API from './API';
 import TextField from 'material-ui/TextField';
 
 let counter = 0;
-function createData(name, service, price, channels, dvr, num, uniqueID) {
+function createData(name, description, service, price, channels, dvr, num, uniqueID) {
   counter += 1;
   //console.log(counter)
-  return { id: counter, name, service, price, channels, dvr, num, uniqueID};
+  return { id: counter, name, description, service, price, channels, dvr, num, uniqueID};
 }
 
 const columnData = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Add-on Name' },
-  { id: 'service', numeric: false, disablePadding: true, label: 'Service' },
-  { id: 'price', numeric: true, disablePadding: false, label: 'Price' },
+  { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
+  { id: 'service', numeric: false, disablePadding: false, label: 'Service' },
+  { id: 'description', numeric: false, disablePadding: false, label: 'Description' },
+  { id: 'price', numeric: false, disablePadding: false, label: 'Price' },
   { id: 'channels', numeric: false, disablePadding: false, label: 'Channels' },
-  { id: 'dvr', numeric: false, disablePadding: false, label: 'DVR' },
-  { id: 'num', numeric: false, disablePadding: false, label: 'Number of Devices' },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -271,7 +270,7 @@ class AddonsTable extends React.Component {
       const addonNames = [];
       for (const i in channels) {
         newAddon = channels[i];
-        addThisAddon = createData(newAddon.addonName, newAddon.forService, newAddon.price, newAddon.channels, newAddon.dvr, newAddon.devicesNum, newAddon['_id']);
+        addThisAddon = createData(newAddon.addonName, newAddon.description, newAddon.forService, newAddon.price, newAddon.channels, newAddon.dvr, newAddon.devicesNum, newAddon['_id']);
         addAddonName = (newAddon.addonName).toLowerCase();
         addonArray.push(addThisAddon);
         addonNames.push(addAddonName);
@@ -289,12 +288,12 @@ class AddonsTable extends React.Component {
   deleteSelected = () => {
     const { selected, data } = this.state;
     for (const i in selected) {
-      let deleteChan = selected[i];
+      let deleteAddon = selected[i];
       for (const t in data) {
-        let dataChan = data[t];
-        if (dataChan.id === deleteChan) {
-          //console.log(dataChan.uniqueID);
-          API.deleteAddOn(dataChan.uniqueID);
+        let dataAddon = data[t];
+        if (dataAddon.id === deleteAddon) {
+          //console.log(dataAddon.uniqueID);
+          API.deleteAddOn(dataAddon.uniqueID);
         }
       }
     }
@@ -394,16 +393,15 @@ class AddonsTable extends React.Component {
                       <Checkbox checked={isSelected} />
                     </TableCell>
                     <TableCell padding="checkbox">
-                      <IconButton component={Link} to={{pathname: '/admin/' + n.uniqueID + '/editAddon', state: {selectedName: n.name, selectedCat: n.category}}} aria-label="Edit">
+                      <IconButton component={Link} to={{pathname: '/admin/' + n.uniqueID + '/editAddon', state: {selectedName: n.name, selectedDesc: n.description, selectedService: n.service, selectedPrice: n.price, selectedChan: n.channels, selectedDvr: n.dvr, selectedNum: n.num}}} aria-label="Edit">
                         <EditIcon />
                       </IconButton>
                     </TableCell>
-                    <TableCell padding="none">{n.name}</TableCell>
-                    <TableCell padding="none">{n.service}</TableCell>
-                    <TableCell padding="none">{n.price}</TableCell>
-                    <TableCell padding="none">{n.channels}</TableCell>
-                    <TableCell padding="none">{n.dvr}</TableCell>
-                    <TableCell padding="none">{n.num}</TableCell>
+                    <TableCell>{n.name}</TableCell>
+                    <TableCell>{n.service}</TableCell>
+                    <TableCell>{n.description}</TableCell>
+                    <TableCell>{n.price}</TableCell>
+                    <TableCell>{n.channels}</TableCell>
                   </TableRow>
                 );
               })}
