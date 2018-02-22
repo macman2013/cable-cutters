@@ -217,13 +217,13 @@ class AddAddOn extends React.Component {
         >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton color="inherit" component={Link} to="/admin" onClick={this.handleClose} aria-label="Close">
+              <IconButton color="inherit" component={Link} to={{pathname: '/admin', state: {tabValue: 2}}} onClick={this.handleClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>
                 {this.state.title}
               </Typography>
-              <Button color="inherit" component={Link} to="/admin" onClick={this.handleSubmit}  aria-label="Save">
+              <Button color="inherit" component={Link} to={{pathname: '/admin', state: {tabValue: 2}}} onClick={this.handleSubmit}  aria-label="Save">
                 save
               </Button>
             </Toolbar>

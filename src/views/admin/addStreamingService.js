@@ -84,6 +84,7 @@ class AddStreamingService extends React.Component {
     dvr: false,
     numberOfDevices: '',
     allChannels: [],
+    allPackages: [],
   };
 
   handleClickOpen = () => {
@@ -123,6 +124,7 @@ class AddStreamingService extends React.Component {
   };
 
   handleServiceDvr = event => {
+    console.log(event.target.checked)
     this.setState({ dvr: event.target.checked });
   };
 
@@ -159,7 +161,7 @@ class AddStreamingService extends React.Component {
       let website = (selectedWeb !== this.state.website) ? this.state.website : null;
       let standardChannels = (selectedStandard !== this.state.base_channels) ? this.state.base_channels : null;
       let standardPackages = (selectedPackages !== this.state.channel_packages) ? this.state.channel_packages : null;
-      let dvr = (selectedDvr !== this.state.dvr) ? this.state.dvr : null;
+      let dvr = (selectedDvr != this.state.dvr) ? this.state.dvr : null;
       let numberOfDevices = (selectedNumDev !== this.state.numberOfDevices) ? this.state.numberOfDevices : null;
       let updatedService = {name: name, description: description, price: price, image_url: image, website: website, base_channels: standardChannels, channel_packages: standardPackages, dvr: dvr, numberOfDevices: numberOfDevices};
       API.updateService(editingID, updatedService);
@@ -183,9 +185,27 @@ class AddStreamingService extends React.Component {
     API.getChannels(onSuccess);
   }
 
+  getPackages() {
+    const onSuccess = (packages) => {
+      let newPackage;
+      let addThisPackage;
+      const packageArray = [];
+      for (const i in packages) {
+        newPackage = packages[i];
+        addThisPackage = newPackage.addonName;
+        packageArray.push(addThisPackage);
+      }
+      this.setState({
+        allPackages: packageArray,
+      })
+    };
+    API.getAddons(onSuccess);
+  }
+
   componentDidMount() {
     //console.log("Mounted")
     this.getChannels();
+    this.getPackages();
     if (this.props.match.params.id != null) {
       const {selectedName, selectedDesc, selectedPrice, selectedWeb, selectedStandard, selectedPackages, selectedDvr, selectedNumDev} = this.props.location.state;
       this.setState({name: selectedName, description: selectedDesc, price: selectedPrice, website: selectedWeb, base_channels: selectedStandard, channel_packages: selectedPackages, dvr: selectedDvr, numberOfDevices: selectedNumDev, title: 'Edit Streaming Service'});
@@ -203,13 +223,13 @@ class AddStreamingService extends React.Component {
         >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton color="inherit" component={Link} to="/admin" onClick={this.handleClose} aria-label="Close">
+              <IconButton color="inherit" component={Link} to={{pathname: '/admin', state: {tabValue: 0}}} onClick={this.handleClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>
                 Add Streaming Service
               </Typography>
-              <Button color="inherit" component={Link} to="/admin" onClick={this.handleSubmit}>
+              <Button color="inherit" component={Link} to={{pathname: '/admin', state: {tabValue: 0}}} onClick={this.handleSubmit}>
                 save
               </Button>
             </Toolbar>
@@ -308,10 +328,10 @@ class AddStreamingService extends React.Component {
             renderValue={selected => selected.join(', ')}
             MenuProps={MenuProps}
           >
-            {this.state.allChannels.map(eachChannel => (
-              <MenuItem key={eachChannel} value={eachChannel}>
-                <Checkbox checked={this.state.channel_packages.indexOf(eachChannel) > -1} />
-                <ListItemText primary={eachChannel} />
+            {this.state.allPackages.map(eachPackage => (
+              <MenuItem key={eachPackage} value={eachPackage}>
+                <Checkbox checked={this.state.channel_packages.indexOf(eachPackage) > -1} />
+                <ListItemText primary={eachPackage} />
               </MenuItem>
             ))}
           </Select>
@@ -324,6 +344,7 @@ class AddStreamingService extends React.Component {
                 bar: classes.bar,
                 }}
               checked={this.state.dvr}
+              value="dvr"
               onChange={this.handleServiceDvr}
             />
           }

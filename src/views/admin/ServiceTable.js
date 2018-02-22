@@ -191,8 +191,9 @@ class ServiceTable extends React.Component {
       selected: [],
       data: [
 
-      ].sort((a, b) => (a.calories < b.calories ? -1 : 1)),
+      ].sort((a, b) => (a.name < b.name ? -1 : 1)),
       filteredServices: [],
+      packageArray: [{ addOnName: '', service: []}],
       originaldata: [],
       page: 0,
       rowsPerPage: 5,
@@ -278,6 +279,50 @@ class ServiceTable extends React.Component {
     API.getServices(onSuccess);
   }
 
+  getPackages() {
+    const onSuccess = (packages) => {
+      let newPackage;
+      let addPackageService;
+      let addPackageName;
+      const packageNames = [];
+      const packageServices = [];
+      for (const i in packages) {
+        newPackage = packages[i];
+        addPackageName = (newPackage.addonName);
+        addPackageService = (newPackage.forService);
+        packageNames.push(addPackageName);
+        packageServices.push(addPackageService);
+        this.setState({
+          packageArray: [{addOnName: packageNames, service: packageServices}]
+        });
+        //console.log(this.state.packageArray)
+      }
+    };
+    API.getAddons(onSuccess);
+  }
+
+  syncPackagesAndServices() {
+    let beforeSync = this.state.originaldata;
+    let packagesBeforeSync = this.state.packageArray;
+    const namesToAdd = [];
+    for (const i in beforeSync) {
+      var eachRow = beforeSync[i];
+      console.log(eachRow)
+      var rowName = eachRow.name;
+      var rowServices = eachRow.forService;
+      for (const t in packagesBeforeSync) {
+        var eachPackage = packagesBeforeSync[t];
+        console.log(eachPackage)
+        var packageName = eachPackage.addOnName;
+        var packageService = eachPackage.service;
+        if (rowName == packageService) {
+          namesToAdd.push(packageService);
+          console.log(namesToAdd)
+        }
+      }
+    }
+  }
+
   deleteSelected = () => {
     const { selected, data } = this.state;
     for (const i in selected) {
@@ -322,6 +367,8 @@ class ServiceTable extends React.Component {
 
   componentDidMount() {
     this.getServices();
+    this.getPackages();
+    //this.syncPackagesAndServices();
     if (!this.pollInterval) {
       this.pollInterval = 2000
     } 
@@ -373,7 +420,7 @@ class ServiceTable extends React.Component {
                     <TableCell>{n.description}</TableCell>
                     <TableCell>{n.price}</TableCell>
                     <TableCell>{n.channels + ""}</TableCell>
-                    <TableCell>{n.packages}</TableCell>
+                    <TableCell>{n.packages + ""}</TableCell>
                   </TableRow>
                 );
               })}

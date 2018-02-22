@@ -43,6 +43,13 @@ class AdminScreen extends React.Component {
     this.setState({ value: index });
   };
 
+  componentWillMount() {
+    if (this.props.location.state != null) {
+      const {tabValue} = this.props.location.state;
+      this.setState({value: tabValue});
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { value } = this.state;

@@ -92,7 +92,14 @@ router.route('/services/:service_id')
       (req.body.website) ? service.website = req.body.website : null;
       (req.body.base_channels) ? service.base_channels = req.body.base_channels : null;
       (req.body.channel_packages) ? service.channel_packages = req.body.channel_packages : null;
-      (req.body.dvr) ? service.dvr = req.body.dvr : null;
+      //console.log("Req Body DVR " + req.body.dvr);
+      //console.log("Service DVR " + service.dvr);
+      if (req.body.dvr != service.dvr) {
+        service.dvr = req.body.dvr;
+        //console.log("New Service DVR " + service.dvr);
+      } else {
+        service.dvr = null;
+      }
       (req.body.numberOfDevices) ? service.numberOfDevices = req.body.numberOfDevices : null;
       //save service
       service.save(function(err) {
@@ -212,7 +219,11 @@ router.route('/channels/:channel_id')
       (req.body.forService) ? addon.forService = req.body.forService : null;
       (req.body.price) ? addon.price = req.body.price: null;
       (req.body.channels) ? addon.channels = req.body.channels : null;
-      (req.body.dvr) ? addon.dvr = req.body.dvr : null;
+      if (req.body.dvr != addon.dvr) {
+        addon.dvr = req.body.dvr;
+      } else {
+        addon.dvr = null;
+      }
       (req.body.devicesNum) ? addon.devicesNum = req.body.devicesNum: null;
       //save channel
       addon.save(function(err) {
