@@ -27,6 +27,7 @@ const styles = {
   appTitle: {
     marginLeft: 6,
     marginRight: 28,
+    textDecoration: 'none'
   },
 };
 
@@ -38,7 +39,7 @@ class SiteNavMenu extends Component {
         <AppBar position="static">
           <Toolbar>
             <TVIcon />
-            <Typography variant="title" color="inherit" className={classes.appTitle}>
+            <Typography variant="title" color="inherit" component={Link} to="/" className={classes.appTitle}>
               Cable Cutters
             </Typography>
             <Button color="inherit" component={Link} to="/compare" className={classes.flex}>Compare All Services</Button>

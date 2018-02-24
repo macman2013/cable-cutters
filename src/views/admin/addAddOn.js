@@ -81,9 +81,23 @@ function Transition(props) {
 }
 
 class AddAddOn extends React.Component {
+  
+  state = { 
+    addonName: '',
+    description: '', 
+    forService: '', 
+    price: 0, 
+    channels: [], 
+    dvr: false, 
+    devicesNum: '', 
+    open: true, 
+    title: 'Create Add-on', 
+    allChannels: [], 
+    allServices: [] 
+  };
+
   constructor(props) {
     super(props);
-    this.state = { addonName: '', description: '', forService: '', price: 0, channels: [], dvr: false, devicesNum: '', open: true, title: 'Create Add-on', allChannels: [], allServices: [] };
     this.handleAddOnNameChange = this.handleAddOnNameChange.bind(this);
     this.handleForServiceChange = this.handleForServiceChange.bind(this);
     this.handlePriceChange = this.handlePriceChange.bind(this);
@@ -101,10 +115,6 @@ class AddAddOn extends React.Component {
   }
   handlePriceChange(e) {
     this.setState({ price: e.target.value });
-  }
-
-  handleDVRChange(e) {
-    this.setState({ dvr: e.target.checked });
   }
 
   handleNumDeviceChange(e) {
@@ -128,14 +138,16 @@ class AddAddOn extends React.Component {
       this.setState({  addonName: '', description: '', forService: '', price: '', channels: [], dvr: false, devicesNum: '', open: false});
     } else {
       //console.log("Editing!")
-      const {selectedName, selectedDesc, selectedService, selectedPrice, selectedNum, selectedChan, selectedDvr} = this.props.location.state;
+      const {selectedName, selectedDesc, selectedService, selectedPrice, selectedChan, selectedDvr, selectedNum} = this.props.location.state;
       let editingID = this.props.match.params.id;
       let name = (selectedName !== this.state.addonName) ? this.state.addonName : null;
       let description = (selectedDesc !== this.state.description) ? this.state.description : null;
       let service = (selectedService !== this.state.forService) ? this.state.forService : null;
       let price = (selectedPrice !== this.state.price) ? this.state.price : null;
       let channels = (selectedChan !== this.state.channels) ? this.state.channels : null;
-      let dvr = (selectedDvr !== this.state.dvr) ? this.state.dvr : null;
+      //console.log("Add file DVR Before Any Change: selectedDVR " + selectedDvr)
+      //console.log("Add file updated DVR: this.state.dvr " + this.state.dvr)
+      let dvr = (selectedDvr != this.state.dvr) ? this.state.dvr : selectedDvr;
       let num = (selectedNum !== this.state.devicesNum) ? this.state.devicesNum : null;
       let image = null;
       let updatedAddon = {addonName: name, description: description, forService: service, price: price, channels: channels, dvr: dvr, devicesNum: num};
@@ -162,6 +174,10 @@ class AddAddOn extends React.Component {
   handleDesc = event => {
     this.setState({ description: event.target.value });
   };
+
+  handleDVRChange = event => {
+    this.setState({ dvr: event.target.checked });
+  }
 
   getChannels() {
     const onSuccess = (channels) => {
@@ -197,11 +213,12 @@ class AddAddOn extends React.Component {
     API.getServices(onSuccess);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getChannels();
     this.getServices();
     if (this.props.match.params.id != null) {
-      const {selectedName, selectedDesc, selectedService, selectedPrice, selectedNum, selectedChan, selectedDvr} = this.props.location.state;
+      //console.log("Pulled in DVR value " +selectedDvr)
+      const {selectedName, selectedDesc, selectedService, selectedPrice, selectedChan, selectedDvr, selectedNum} = this.props.location.state;
       this.setState({addonName: selectedName, description: selectedDesc, forService: selectedService, price: selectedPrice, channels: selectedChan, dvr: selectedDvr, devicesNum: selectedNum, title: 'Edit Add-on'});
     }
   }
@@ -330,7 +347,8 @@ class AddAddOn extends React.Component {
                 checked: classes.checked,
                 bar: classes.bar,
                 }}
-              checked={this.state.dvr}
+              checked={!!this.state.dvr}
+              value="dvr"
               onChange={this.handleDVRChange}
             />
           }

@@ -374,6 +374,11 @@ class ServiceTable extends React.Component {
     } 
   }
 
+  componentWillReceiveProps(nextProps) {
+    //console.log("Receiving New Props");
+    this.getServices();
+  }
+
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;

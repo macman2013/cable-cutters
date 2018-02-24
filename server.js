@@ -94,12 +94,16 @@ router.route('/services/:service_id')
       (req.body.channel_packages) ? service.channel_packages = req.body.channel_packages : null;
       //console.log("Req Body DVR " + req.body.dvr);
       //console.log("Service DVR " + service.dvr);
-      if (req.body.dvr != service.dvr) {
-        service.dvr = req.body.dvr;
-        //console.log("New Service DVR " + service.dvr);
-      } else {
-        service.dvr = null;
-      }
+      // if ((req.body.dvr != service.dvr) && (req.body.dvr != null)) {
+      //   service.dvr = req.body.dvr;
+      //   console.log("New Service DVR " + service.dvr);
+      //   return;
+      // } else {
+      //   service.dvr = null;
+      //   console.log("Inside Else " + service.dvr);
+      // }
+      (req.body.dvr != service.dvr) ? service.dvr = req.body.dvr : service.dvr;
+      //console.log("New Service DVR " + service.dvr);
       (req.body.numberOfDevices) ? service.numberOfDevices = req.body.numberOfDevices : null;
       //save service
       service.save(function(err) {
@@ -219,11 +223,13 @@ router.route('/channels/:channel_id')
       (req.body.forService) ? addon.forService = req.body.forService : null;
       (req.body.price) ? addon.price = req.body.price: null;
       (req.body.channels) ? addon.channels = req.body.channels : null;
-      if (req.body.dvr != addon.dvr) {
-        addon.dvr = req.body.dvr;
-      } else {
-        addon.dvr = null;
-      }
+      // if (req.body.dvr != addon.dvr) {
+      //   addon.dvr = req.body.dvr;
+      //   console.log("New Add DVR " + addon.dvr);
+      // } else {
+      //   addon.dvr = null;
+      // }
+      (req.body.dvr != addon.dvr) ? addon.dvr = req.body.dvr : addon.dvr;
       (req.body.devicesNum) ? addon.devicesNum = req.body.devicesNum: null;
       //save channel
       addon.save(function(err) {

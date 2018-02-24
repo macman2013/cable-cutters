@@ -161,7 +161,9 @@ class AddStreamingService extends React.Component {
       let website = (selectedWeb !== this.state.website) ? this.state.website : null;
       let standardChannels = (selectedStandard !== this.state.base_channels) ? this.state.base_channels : null;
       let standardPackages = (selectedPackages !== this.state.channel_packages) ? this.state.channel_packages : null;
-      let dvr = (selectedDvr != this.state.dvr) ? this.state.dvr : null;
+      //console.log("Add file DVR Before Any Change: selectedDVR " + selectedDvr)
+      //console.log("Add file updated DVR: this.state.dvr " + this.state.dvr)
+      let dvr = (selectedDvr != this.state.dvr) ? this.state.dvr : selectedDvr;
       let numberOfDevices = (selectedNumDev !== this.state.numberOfDevices) ? this.state.numberOfDevices : null;
       let updatedService = {name: name, description: description, price: price, image_url: image, website: website, base_channels: standardChannels, channel_packages: standardPackages, dvr: dvr, numberOfDevices: numberOfDevices};
       API.updateService(editingID, updatedService);
@@ -208,6 +210,7 @@ class AddStreamingService extends React.Component {
     this.getPackages();
     if (this.props.match.params.id != null) {
       const {selectedName, selectedDesc, selectedPrice, selectedWeb, selectedStandard, selectedPackages, selectedDvr, selectedNumDev} = this.props.location.state;
+      //console.log("DVR Value passed in " + selectedDvr)
       this.setState({name: selectedName, description: selectedDesc, price: selectedPrice, website: selectedWeb, base_channels: selectedStandard, channel_packages: selectedPackages, dvr: selectedDvr, numberOfDevices: selectedNumDev, title: 'Edit Streaming Service'});
     }
   }
@@ -343,7 +346,7 @@ class AddStreamingService extends React.Component {
                 checked: classes.checked,
                 bar: classes.bar,
                 }}
-              checked={this.state.dvr}
+              checked={!!this.state.dvr}
               value="dvr"
               onChange={this.handleServiceDvr}
             />
