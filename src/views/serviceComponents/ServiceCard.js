@@ -6,10 +6,14 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import API from '../admin/API'
 import ServiceInfoBox from './ServiceInfoBox'
+import ChannelGrid from './ChannelGrid';
+import AddOnExpand from './AddOnExpand';
 
 const styles = theme => ({
   card: {
     minWidth: 275,
+    marginLeft: 40,
+    marginRight: 40,
   },
   bullet: {
     display: 'inline-block',
@@ -42,27 +46,6 @@ class ServiceCard extends React.Component {
         };
       }
 
-    //   componentDidMount() {
-    //     this.getServices();
-    //   }
-    
-    //   getServices() {
-    //     const onSuccess = (services) => {
-    //       let newService;
-    //       let addThisService;
-    //       const serviceArray = [];
-    //       for (const i in services) {
-    //         newService = services[i];
-    //         addThisService = createData(newService.name, newService.description, newService.price, newService.image_url, newService.website, newService.base_channels, newService.channel_packages, newService.dvr, newService.numberOfDevices, newService['_id']);
-    //         serviceArray.push(addThisService);
-    //       }
-    //       this.setState({
-    //         data: serviceArray,
-    //       });
-    //     };
-    //     API.getServices(onSuccess);
-    //   }
-
       render() {
         const { classes } = this.props;
         return (
@@ -75,6 +58,8 @@ class ServiceCard extends React.Component {
                 website = {this.props.serviceWebsite}
                 dvr = {this.props.serviceDVR}
                 />
+                <ChannelGrid channels={this.props.serviceChannels} />
+                <AddOnExpand name={this.props.serviceTitle} addons={this.props.servicePackages} />
             </Paper>
             </div>
         );

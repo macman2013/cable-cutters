@@ -4,10 +4,11 @@ import { withStyles } from 'material-ui/styles';
 import Card, { CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
+import API from '../admin/API';
 
 const styles = theme => ({
   card: {
-    minWidth: 275,
+    minWidth: 40,
   },
   bullet: {
     display: 'inline-block',
@@ -15,23 +16,54 @@ const styles = theme => ({
     transform: 'scale(0.8)',
   },
   title: {
-    marginBottom: 16,
-    fontSize: 14,
-    color: theme.palette.text.secondary,
+    fontSize: 16,
+    color: theme.palette.text.primary,
+    marginBottom: 5,
   },
   pos: {
-    marginBottom: 12,
     color: theme.palette.text.secondary,
   },
 });
+
+const chooseCategories = [
+  'Local Broadcast',
+  'Entertainment & Lifestyle',
+  'Family & Kids',
+  'Movies',
+  'News',
+  'Sports',
+  'Premium',
+  'Spanish & International'
+]
 
 class ChannelCard extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-          data: [],
+          channelCategory: '',
         };
+      }
+
+      findChannelCategory() {
+        const onSuccess = (channels) => {
+          let newChannel;
+          let addChannelCategory;
+          let addChannelName;
+          for (const i in channels) {
+            newChannel = channels[i];
+            addChannelName = newChannel.name;
+            addChannelCategory = newChannel.category;
+            if (addChannelName == this.props.eachChannel) {
+              this.setState({channelCategory: addChannelCategory})
+            }
+          }
+        };
+        API.getChannels(onSuccess);
+      }
+
+      componentDidMount() {
+        this.findChannelCategory();
       }
 
       render() {
@@ -40,15 +72,8 @@ class ChannelCard extends React.Component {
             <div>
             <Card className={classes.card}>
                 <CardContent>
-                <Typography className={classes.title}>Word of the Day</Typography>
-                <Typography variant="headline" component="h2">
-                    be{bull}nev{bull}o{bull}lent
-                </Typography>
-                <Typography className={classes.pos}>adjective</Typography>
-                <Typography component="p">
-                    well meaning and kindly.<br />
-                    {'"a benevolent smile"'}
-                </Typography>
+                <Typography className={classes.title} component="h4">{this.props.eachChannel}</Typography>
+                <Typography className={classes.pos}>{this.state.channelCategory}</Typography>
                 </CardContent>
             </Card>
             </div>

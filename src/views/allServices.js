@@ -11,6 +11,8 @@ const styles = theme => ({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     marginTop: 40,
+    marginLeft: 20,
+    marginRight: 20,
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
   },
@@ -64,7 +66,7 @@ class AllServices extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-      <GridList className={classes.gridList} cols={3}>
+      <GridList className={classes.gridList} cellHeight={650} cols={3}>
         {this.state.data.map(card => (
           <GridListTile key={card.id}>
             <ServiceCard serviceTitle={card.name}
