@@ -401,7 +401,7 @@ class AddonsTable extends React.Component {
                     <TableCell>{n.service}</TableCell>
                     <TableCell>{n.description}</TableCell>
                     <TableCell>{n.price}</TableCell>
-                    <TableCell>{n.channels}</TableCell>
+                    <TableCell>{n.channels + ""}</TableCell>
                   </TableRow>
                 );
               })}

@@ -24,7 +24,7 @@ const styles = theme => ({
   },
   desc: {
       fontSize: 13,
-      height:150,
+      height:180,
   }
 });
 

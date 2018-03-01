@@ -178,7 +178,7 @@ class AddAddOn extends React.Component {
         channelArray.push(addThisChannel);
       }
       this.setState({
-        allChannels: channelArray,
+        allChannels: channelArray.sort((a, b) => (a < b ? -1 : 1)),
       })
     };
     API.getChannels(onSuccess);
