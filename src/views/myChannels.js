@@ -1,7 +1,5 @@
 import React from 'react';
 
-let styles;
-
 class MyChannels extends React.Component {
   
   constructor(props) {
@@ -23,9 +21,5 @@ class MyChannels extends React.Component {
     );
   }
 }
-
-styles = {
-  
-};
 
 export default MyChannels;

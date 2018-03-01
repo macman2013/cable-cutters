@@ -7,9 +7,6 @@ class App extends Component {
     return (
       <div className="App">
         <SiteNavMenu />
-        <p className="App-intro">
-          
-        </p>
       </div>
     );
   }

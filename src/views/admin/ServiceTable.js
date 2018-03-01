@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
 import Table, {
   TableBody,
@@ -20,7 +20,6 @@ import Tooltip from 'material-ui/Tooltip';
 import DeleteIcon from 'material-ui-icons/Delete';
 import EditIcon from 'material-ui-icons/Build';
 import AddCircleIcon from 'material-ui-icons/AddCircleOutline';
-import AddStreamingService from './addStreamingService';
 import { lighten } from 'material-ui/styles/colorManipulator';
 import API from './API'
 
@@ -301,27 +300,27 @@ class ServiceTable extends React.Component {
     API.getAddons(onSuccess);
   }
 
-  syncPackagesAndServices() {
-    let beforeSync = this.state.originaldata;
-    let packagesBeforeSync = this.state.packageArray;
-    const namesToAdd = [];
-    for (const i in beforeSync) {
-      var eachRow = beforeSync[i];
-      console.log(eachRow)
-      var rowName = eachRow.name;
-      var rowServices = eachRow.forService;
-      for (const t in packagesBeforeSync) {
-        var eachPackage = packagesBeforeSync[t];
-        console.log(eachPackage)
-        var packageName = eachPackage.addOnName;
-        var packageService = eachPackage.service;
-        if (rowName == packageService) {
-          namesToAdd.push(packageService);
-          console.log(namesToAdd)
-        }
-      }
-    }
-  }
+  // syncPackagesAndServices() {
+  //   let beforeSync = this.state.originaldata;
+  //   let packagesBeforeSync = this.state.packageArray;
+  //   const namesToAdd = [];
+  //   for (const i in beforeSync) {
+  //     var eachRow = beforeSync[i];
+  //     console.log(eachRow)
+  //     var rowName = eachRow.name;
+  //     var rowServices = eachRow.forService;
+  //     for (const t in packagesBeforeSync) {
+  //       var eachPackage = packagesBeforeSync[t];
+  //       console.log(eachPackage)
+  //       var packageName = eachPackage.addOnName;
+  //       var packageService = eachPackage.service;
+  //       if (rowName == packageService) {
+  //         namesToAdd.push(packageService);
+  //         console.log(namesToAdd)
+  //       }
+  //     }
+  //   }
+  // }
 
   deleteSelected = () => {
     const { selected, data } = this.state;

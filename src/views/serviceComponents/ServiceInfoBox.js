@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
-import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import { Divider } from 'material-ui';
 
@@ -43,7 +42,7 @@ class ServiceInfoBox extends React.Component {
       }
 
       formatDVR() {
-        if (this.props.dvr == true) {
+        if (this.props.dvr === true) {
           this.setState({formattedDVR: 'Includes DVR'});
         }
         else {

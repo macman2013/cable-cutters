@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Card, { CardContent } from 'material-ui/Card';
-import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import API from '../admin/API';
 
@@ -16,25 +15,15 @@ const styles = theme => ({
     transform: 'scale(0.8)',
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     color: theme.palette.text.primary,
     marginBottom: 5,
   },
   pos: {
     color: theme.palette.text.secondary,
+    fontSize: 12,
   },
 });
-
-const chooseCategories = [
-  'Local Broadcast',
-  'Entertainment & Lifestyle',
-  'Family & Kids',
-  'Movies',
-  'News',
-  'Sports',
-  'Premium',
-  'Spanish & International'
-]
 
 class ChannelCard extends React.Component {
 
@@ -54,7 +43,7 @@ class ChannelCard extends React.Component {
             newChannel = channels[i];
             addChannelName = newChannel.name;
             addChannelCategory = newChannel.category;
-            if (addChannelName == this.props.eachChannel) {
+            if (addChannelName === this.props.eachChannel) {
               this.setState({channelCategory: addChannelCategory})
             }
           }
@@ -69,14 +58,12 @@ class ChannelCard extends React.Component {
       render() {
         const { classes } = this.props;
         return (
-            <div>
             <Card className={classes.card}>
                 <CardContent>
                 <Typography className={classes.title} component="h4">{this.props.eachChannel}</Typography>
                 <Typography className={classes.pos}>{this.state.channelCategory}</Typography>
                 </CardContent>
             </Card>
-            </div>
         );
     }
 

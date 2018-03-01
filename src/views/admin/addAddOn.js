@@ -8,13 +8,13 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import Checkbox from 'material-ui/Checkbox';
-import List, { ListItem, ListItemText } from 'material-ui/List';
+import { ListItemText } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import TextField from 'material-ui/TextField';
 import Input, { InputLabel } from 'material-ui/Input';
-import { FormControl, FormControlLabel, FormGroup } from 'material-ui/Form';
+import { FormControl, FormControlLabel } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
 import Switch from 'material-ui/Switch';
@@ -53,17 +53,6 @@ const styles = theme => ({
     },
   },
 });
-
-const chooseCategories = [
-  'Local Broadcast',
-  'Entertainment & Lifestyle',
-  'Family & Kids',
-  'Movies',
-  'News',
-  'Sports',
-  'Premium',
-  'Spanish & International'
-]
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -147,9 +136,8 @@ class AddAddOn extends React.Component {
       let channels = (selectedChan !== this.state.channels) ? this.state.channels : null;
       //console.log("Add file DVR Before Any Change: selectedDVR " + selectedDvr)
       //console.log("Add file updated DVR: this.state.dvr " + this.state.dvr)
-      let dvr = (selectedDvr != this.state.dvr) ? this.state.dvr : selectedDvr;
+      let dvr = (selectedDvr !== this.state.dvr) ? this.state.dvr : selectedDvr;
       let num = (selectedNum !== this.state.devicesNum) ? this.state.devicesNum : null;
-      let image = null;
       let updatedAddon = {addonName: name, description: description, forService: service, price: price, channels: channels, dvr: dvr, devicesNum: num};
       API.updateAddOn(editingID, updatedAddon);
     }
@@ -245,7 +233,7 @@ class AddAddOn extends React.Component {
               </Button>
             </Toolbar>
           </AppBar>
-        <TextField className={classes.field}
+        <TextField 
             required
             label="Add-on Name"
             id="addon-name"
@@ -259,7 +247,7 @@ class AddAddOn extends React.Component {
             helperText="Name the channel"
             margin="normal"
         />
-        <TextField className={classes.field}
+        <TextField c
             required
             id="addon-desc"
             InputLabelProps={{
@@ -292,7 +280,7 @@ class AddAddOn extends React.Component {
             ))}
           </Select>
         </FormControl>
-        <TextField className={classes.field}
+        <TextField
             type="number"
             label="Price"
             id="addon-price"
@@ -306,7 +294,7 @@ class AddAddOn extends React.Component {
             helperText="e.g 35"
             margin="normal"
         />
-        <TextField className={classes.field}
+        <TextField 
             label="Number of Devices"
             id="addon-devices"
             value={this.state.devicesNum}

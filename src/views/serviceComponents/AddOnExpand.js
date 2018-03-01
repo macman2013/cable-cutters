@@ -10,16 +10,22 @@ import ChannelGrid from './ChannelGrid'
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    textAlign: 'left',
   },
   heading: {
+    width: '85%',
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
   },
   priceAlign: {
-    textAlign: 'right',
+    width: '15%',
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
   },
+  desc: {
+      fontSize: 13,
+      height:150,
+  }
 });
 
 class AddOnExpand extends React.Component {
@@ -46,7 +52,7 @@ class AddOnExpand extends React.Component {
                 counter++;
                 newAddon = addons[i];
                 newAddonForService = newAddon.forService;
-                if (newAddonForService == this.props.name) {
+                if (newAddonForService === this.props.name) {
                     singleAddon = {id: counter, name: newAddon.addonName, desc: newAddon.description, price: newAddon.price, dvr: newAddon.dvr, channels: newAddon.channels};
                     addonArray.push(singleAddon);
                 }
@@ -67,10 +73,10 @@ class AddOnExpand extends React.Component {
                 <Typography className={classes.priceAlign}>${panel.price}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-                <Typography>
+                <span className={classes.desc}>
                 {panel.desc}
                 <ChannelGrid channels={panel.channels} />
-                </Typography>
+                </span>
             </ExpansionPanelDetails>
             </ExpansionPanel>
         ))}

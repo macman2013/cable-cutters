@@ -137,7 +137,7 @@ class AddChannel extends React.Component {
               </Button>
             </Toolbar>
           </AppBar>
-        <TextField className={classes.field}
+        <TextField
             required
             label="Channel Name"
             id="channel-name"

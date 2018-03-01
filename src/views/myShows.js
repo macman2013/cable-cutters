@@ -1,7 +1,5 @@
 import React from 'react';
 
-let styles;
-
 class MyShows extends React.Component {
   
   constructor(props) {
@@ -23,9 +21,5 @@ class MyShows extends React.Component {
     );
   }
 }
-
-styles = {
-  
-};
 
 export default MyShows;

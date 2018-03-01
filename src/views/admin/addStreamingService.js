@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
+import { ListItemText } from 'material-ui/List';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
@@ -18,7 +17,7 @@ import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import Checkbox from 'material-ui/Checkbox';
-import { FormControlLabel, FormGroup } from 'material-ui/Form';
+import { FormControlLabel } from 'material-ui/Form';
 import Switch from 'material-ui/Switch';
 import green from 'material-ui/colors/green';
 import API from './API';
@@ -163,7 +162,7 @@ class AddStreamingService extends React.Component {
       let standardPackages = (selectedPackages !== this.state.channel_packages) ? this.state.channel_packages : null;
       //console.log("Add file DVR Before Any Change: selectedDVR " + selectedDvr)
       //console.log("Add file updated DVR: this.state.dvr " + this.state.dvr)
-      let dvr = (selectedDvr != this.state.dvr) ? this.state.dvr : selectedDvr;
+      let dvr = (selectedDvr !== this.state.dvr) ? this.state.dvr : selectedDvr;
       let numberOfDevices = (selectedNumDev !== this.state.numberOfDevices) ? this.state.numberOfDevices : null;
       let updatedService = {name: name, description: description, price: price, image_url: image, website: website, base_channels: standardChannels, channel_packages: standardPackages, dvr: dvr, numberOfDevices: numberOfDevices};
       API.updateService(editingID, updatedService);
@@ -237,7 +236,7 @@ class AddStreamingService extends React.Component {
               </Button>
             </Toolbar>
           </AppBar>
-        <TextField className={classes.field}
+        <TextField 
             required
             id="service-name"
             InputLabelProps={{
@@ -250,7 +249,7 @@ class AddStreamingService extends React.Component {
             helperText="Name the streaming service"
             margin="normal"
         />
-        <TextField className={classes.field}
+        <TextField
             required
             id="service-desc"
             InputLabelProps={{

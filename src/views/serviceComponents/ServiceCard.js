@@ -2,9 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import API from '../admin/API'
 import ServiceInfoBox from './ServiceInfoBox'
 import ChannelGrid from './ChannelGrid';
 import AddOnExpand from './AddOnExpand';
@@ -14,11 +11,11 @@ const styles = theme => ({
     minWidth: 275,
     marginLeft: 40,
     marginRight: 40,
+    paddingBottom: 10,
   },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
+  subheading: {
+    marginBottom: 15,
+    marginTop: 15,
   },
   title: {
     marginBottom: 16,
@@ -30,12 +27,6 @@ const styles = theme => ({
     color: theme.palette.text.secondary,
   },
 });
-
-let counter = 0;
-function createData(name, description, price, image, website, channels, packages, dvr, devices, uniqueID) {
-  counter += 1;
-  return { id: counter, name, description, price, image, website, channels, packages, dvr, devices, uniqueID };
-}
 
 class ServiceCard extends React.Component {
 
@@ -49,19 +40,18 @@ class ServiceCard extends React.Component {
       render() {
         const { classes } = this.props;
         return (
-            <div>
             <Paper className={classes.card} elevation={0}>
-                <ServiceInfoBox title = {this.props.serviceTitle}
-                description = {this.props.serviceDescription}
-                price = {this.props.servicePrice}
-                numberDev = {this.props.serviceDeviceNum}
-                website = {this.props.serviceWebsite}
-                dvr = {this.props.serviceDVR}
+                <ServiceInfoBox title ={this.props.serviceTitle}
+                description ={this.props.serviceDescription}
+                price ={this.props.servicePrice}
+                numberDev ={this.props.serviceDeviceNum}
+                website ={this.props.serviceWebsite}
+                dvr ={this.props.serviceDVR}
                 />
-                <ChannelGrid channels={this.props.serviceChannels} />
+                <ChannelGrid gridTitle={"Standard Channels"} channels={this.props.serviceChannels} />
+                <div className={classes.subheading}>Add-ons & Channel Packages</div>
                 <AddOnExpand name={this.props.serviceTitle} addons={this.props.servicePackages} />
             </Paper>
-            </div>
         );
     }
 

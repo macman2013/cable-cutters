@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route, Switch, Redirect } from 'react-router-dom';
+import { Link, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
@@ -36,7 +36,7 @@ class SiteNavMenu extends Component {
     const { classes } = this.props;
     return (
         <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="sticky">
           <Toolbar>
             <TVIcon />
             <Typography variant="title" color="inherit" component={Link} to="/" className={classes.appTitle}>

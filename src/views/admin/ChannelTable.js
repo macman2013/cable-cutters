@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
 import Table, {
   TableBody,

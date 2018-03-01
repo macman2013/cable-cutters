@@ -1,7 +1,5 @@
 import React from 'react';
 
-let styles;
-
 class Home extends React.Component {
   
   constructor(props) {
@@ -23,9 +21,5 @@ class Home extends React.Component {
     );
   }
 }
-
-styles = {
-  
-};
 
 export default Home;

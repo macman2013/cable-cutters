@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
+import GridList, { GridListTile } from 'material-ui/GridList';
 import API from '../views/admin/API'
 import ServiceCard from './serviceComponents/ServiceCard'
 
@@ -20,7 +20,7 @@ const styles = theme => ({
     flexWrap: 'nowrap',
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: 'translateZ(0)',
-  },
+    },
   title: {
     color: theme.palette.primary.light,
   },
@@ -66,7 +66,7 @@ class AllServices extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-      <GridList className={classes.gridList} cellHeight={650} cols={3}>
+      <GridList className={classes.gridList} cellHeight={'auto'} cols={3}>
         {this.state.data.map(card => (
           <GridListTile key={card.id}>
             <ServiceCard serviceTitle={card.name}
