@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import GridList, { GridListTile } from 'material-ui/GridList';
 import ChannelCard from './ChannelCard'
-import Typography from 'material-ui/Typography';
 
 const styles = theme => ({
   root: {
@@ -11,25 +10,22 @@ const styles = theme => ({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     marginTop: 40,
-    marginLeft: 20,
-    marginRight: 20,
     overflow: 'hidden',
+    textAlign: 'center',
     backgroundColor: theme.palette.background.paper,
   },
   gridList: {
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: 'translateZ(0)',
-    height: 200,
+    height: 110,
+    width: 340,
   },
   title: {
     color: theme.palette.primary.light,
   },
-  subhead: {
-    marginBottom: 10,
-  }
 });
 
-class ChannelGrid extends React.Component {
+class AddonGrid extends React.Component {
   
   constructor(props) {
     super(props);
@@ -56,16 +52,8 @@ class ChannelGrid extends React.Component {
   
   render() {
     const { classes } = this.props;
-    if (this.props.channels.length <= 0) {
-      console.log("Test... " + this.props.channels.length)
-      return (
-        <span className={classes.root}></span>
-      );
-    }
-
     return (
       <span className={classes.root}>
-      <Typography variant="subheading" className={classes.subhead} color="inherit">Standard Channels</Typography>
       <GridList className={classes.gridList} cellHeight={100} cols={2}>
         {this.state.data.map(card => (
           <GridListTile key={card.id}>
@@ -78,8 +66,8 @@ class ChannelGrid extends React.Component {
   }
 }
 
-ChannelGrid.propTypes = {
+AddonGrid.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ChannelGrid);
+export default withStyles(styles)(AddonGrid);

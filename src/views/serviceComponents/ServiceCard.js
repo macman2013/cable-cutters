@@ -48,7 +48,7 @@ class ServiceCard extends React.Component {
                 website ={this.props.serviceWebsite}
                 dvr ={this.props.serviceDVR}
                 />
-                <ChannelGrid gridTitle={"Standard Channels"} channels={this.props.serviceChannels} />
+                <ChannelGrid channels={this.props.serviceChannels} />
                 <div className={classes.subheading}>Add-ons & Channel Packages</div>
                 <AddOnExpand name={this.props.serviceTitle} addons={this.props.servicePackages} />
             </Paper>

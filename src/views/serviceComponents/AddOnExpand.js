@@ -5,7 +5,7 @@ import ExpansionPanel, {ExpansionPanelSummary, ExpansionPanelDetails} from 'mate
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import API from '../admin/API';
-import ChannelGrid from './ChannelGrid'
+import AddonGrid from './AddonGrid';
 
 const styles = theme => ({
   root: {
@@ -75,7 +75,7 @@ class AddOnExpand extends React.Component {
             <ExpansionPanelDetails>
                 <span className={classes.desc}>
                 {panel.desc}
-                <ChannelGrid channels={panel.channels} />
+                <AddonGrid channels={panel.channels} />
                 </span>
             </ExpansionPanelDetails>
             </ExpansionPanel>

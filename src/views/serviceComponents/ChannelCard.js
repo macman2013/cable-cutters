@@ -51,7 +51,7 @@ class ChannelCard extends React.Component {
         API.getChannels(onSuccess);
       }
 
-      componentDidMount() {
+      componentWillMount() {
         this.findChannelCategory();
       }
 
