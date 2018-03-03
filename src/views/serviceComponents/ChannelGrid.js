@@ -57,7 +57,6 @@ class ChannelGrid extends React.Component {
   render() {
     const { classes } = this.props;
     if (this.props.channels.length <= 0) {
-      console.log("Test... " + this.props.channels.length)
       return (
         <span className={classes.root}></span>
       );

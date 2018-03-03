@@ -116,7 +116,7 @@ class AddAddOn extends React.Component {
       let description = this.state.description.trim();
       let service = this.state.forService.trim();
       let price = this.state.price;
-      let channels = this.state.channels;
+      let channels = this.state.channels.sort((a, b) => (a < b ? -1 : 1));
       let dvr = this.state.dvr;
       let num = this.state.devicesNum;
       if (!name) {
@@ -133,7 +133,7 @@ class AddAddOn extends React.Component {
       let description = (selectedDesc !== this.state.description) ? this.state.description : null;
       let service = (selectedService !== this.state.forService) ? this.state.forService : null;
       let price = (selectedPrice !== this.state.price) ? this.state.price : null;
-      let channels = (selectedChan !== this.state.channels) ? this.state.channels : null;
+      let channels = (selectedChan !== this.state.channels.sort((a, b) => (a < b ? -1 : 1))) ? this.state.channels.sort((a, b) => (a < b ? -1 : 1)) : null;
       //console.log("Add file DVR Before Any Change: selectedDVR " + selectedDvr)
       //console.log("Add file updated DVR: this.state.dvr " + this.state.dvr)
       let dvr = (selectedDvr !== this.state.dvr) ? this.state.dvr : selectedDvr;

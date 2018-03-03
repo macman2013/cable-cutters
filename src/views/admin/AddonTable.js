@@ -18,6 +18,7 @@ import Checkbox from 'material-ui/Checkbox';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import DeleteIcon from 'material-ui-icons/Delete';
+import ContentCopy from 'material-ui-icons/ContentCopy'
 import EditIcon from 'material-ui-icons/Build';
 import AddCircleIcon from 'material-ui-icons/AddCircleOutline';
 import { lighten } from 'material-ui/styles/colorManipulator';
@@ -127,7 +128,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, deleteFunc, classes } = props;
+  const { numSelected, deleteFunc, copyFunc, classes } = props;
 
   return (
     <Toolbar
@@ -145,11 +146,18 @@ let EnhancedTableToolbar = props => {
       <div className={classes.spacer} />
       <div className={classes.actions}>
         {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton onClick={deleteFunc} aria-label="Delete">
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+          <span>
+            <Tooltip title="Delete">
+              <IconButton onClick={deleteFunc} aria-label="Delete">
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Duplicate">
+                <IconButton onClick={copyFunc} aria-label="Duplicate">
+                  <ContentCopy />
+                </IconButton>
+              </Tooltip>
+            </span>
         ) : (
           <Tooltip title="Add Add-on">
             <IconButton component={Link} to="/admin/createAddon" aria-label="add addon">
@@ -202,7 +210,7 @@ class AddonsTable extends React.Component {
       filteredAddons: [],
       originaldata: [],
       page: 0,
-      rowsPerPage: 5,
+      rowsPerPage: 25,
     };
   }
 
@@ -298,6 +306,20 @@ class AddonsTable extends React.Component {
       }
     }
   }
+
+  copySelected = () => {
+    const { selected, data } = this.state;
+    for (const i in selected) {
+      let copyAddon = selected[i];
+      for (const t in data) {
+        let dataAddon = data[t];
+        if (dataAddon.id === copyAddon) {
+          //console.log(dataAddon.uniqueID);
+          API.submitNewAddOn({ addonName: dataAddon.name, description: dataAddon.description, forService: dataAddon.service, price: dataAddon.price, channels: dataAddon.channels, dvr: dataAddon.dvr, devicesNum: dataAddon.num });
+        }
+      }
+    }
+  }
   
   filterAddons = event => {
     //event.preventDefault();
@@ -365,6 +387,7 @@ class AddonsTable extends React.Component {
         <EnhancedTableToolbar 
         numSelected={selected.length} 
         deleteFunc ={this.deleteSelected}
+        copyFunc={this.copySelected}
         />
         
           <Table className={classes.table}>

@@ -138,7 +138,7 @@ class AddStreamingService extends React.Component {
       let price = this.state.price.trim();
       let image = 'EmptyImage';
       let website = this.state.website.trim();
-      let standardChannels = this.state.base_channels;
+      let standardChannels = this.state.base_channels.sort((a, b) => (a < b ? -1 : 1));
       let standardPackages = this.state.channel_packages;
       let dvr = this.state.dvr;
       let numberOfDevices = this.state.numberOfDevices.trim();
@@ -158,7 +158,7 @@ class AddStreamingService extends React.Component {
       //Image will never be changed from original value because images are not supported right now, so this is always null.
       let image = null;
       let website = (selectedWeb !== this.state.website) ? this.state.website : null;
-      let standardChannels = (selectedStandard !== this.state.base_channels) ? this.state.base_channels : null;
+      let standardChannels = (selectedStandard !== this.state.base_channels.sort((a, b) => (a < b ? -1 : 1))) ? this.state.base_channels.sort((a, b) => (a < b ? -1 : 1)) : null;
       let standardPackages = (selectedPackages !== this.state.channel_packages) ? this.state.channel_packages : null;
       //console.log("Add file DVR Before Any Change: selectedDVR " + selectedDvr)
       //console.log("Add file updated DVR: this.state.dvr " + this.state.dvr)
