@@ -80,7 +80,7 @@ function createData(name, category, uniqueID) {
 class MyChannels extends React.Component {
   state = {
     mobileOpen: false,
-    open: [],
+    open: [{ catId: 0, isOpen: false }],
     checked: [0],
     data: [],
     originaldata: [],
@@ -90,7 +90,16 @@ class MyChannels extends React.Component {
   };
 
   handleClick = (event, id) => {
-    this.setState({ open: !this.state.open });
+    const { open } = this.state;
+    let array = open;
+    let findValue = this.state.open[id];
+    console.log((findValue))
+    for (const i in array) {
+      if (array[i] === findValue) {
+        array[i].isOpen = !(array[i].isOpen)
+        this.setState({open: array})
+      }
+    }
   };
 
   handleDrawerToggle = () => {
@@ -112,12 +121,6 @@ class MyChannels extends React.Component {
       checked: newChecked,
     });
   };
-
-  isOpen = id => this.state.open.indexOf(id) !== -1;
-
-  componentWillMount() {
-    this.getChannels();
-  }
 
   getChannels() {
     const onSuccess = (channels) => {
@@ -142,12 +145,15 @@ class MyChannels extends React.Component {
 
       let findChannels = this.state.originaldata;
       const finalArray = [];
+      const openArray = [];
       let count = 0;
       let chanCount = 0;
       var channelsInCategory = [];
       for (const i in chooseCategories) {
-        count++;
         let categoryName = chooseCategories[i]
+        openArray.push({catId: count, isOpen: false})
+        this.setState({open: openArray})
+        //console.log(openArray)
         for (const k in findChannels) {
           let eachChannelCategory = findChannels[k].category;
           if (eachChannelCategory === categoryName) {
@@ -157,11 +163,16 @@ class MyChannels extends React.Component {
         }
         finalArray.push({count, categoryName, channelsInCategory})
         channelsInCategory = [];
+        count++;
       }
       this.setState({sortIntoCategories: finalArray})
       //console.log(finalArray)
       };
     API.getChannels(onSuccess);
+  }
+
+  componentWillMount() {
+    this.getChannels();
   }
 
   render() {
@@ -177,9 +188,9 @@ class MyChannels extends React.Component {
             <List key={n.count}>
                 <ListItem button onClick={event => this.handleClick(event, n.count)}>
                 <ListItemText primary={n.categoryName} />
-                {this.state.open ? <ExpandLess /> : <ExpandMore />}
+                {this.state.open[n.count].isOpen ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
-              <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+              <Collapse in={this.state.open[n.count].isOpen} timeout="auto" unmountOnExit>
                 {n.channelsInCategory.map(m => (
                   <List key={m.channelCount} dense={true} component="div" disablePadding>
                     <ListItem onClick={this.handleToggle(m.channelCount)} button className={classes.nested} disableRipple>
