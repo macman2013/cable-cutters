@@ -4,16 +4,13 @@ import { withStyles } from 'material-ui/styles';
 import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import Collapse from 'material-ui/transitions/Collapse';
-import InboxIcon from 'material-ui-icons/MoveToInbox';
-import DraftsIcon from 'material-ui-icons/Drafts';
-import SendIcon from 'material-ui-icons/Send';
+import Checkbox from 'material-ui/Checkbox'
 import ExpandLess from 'material-ui-icons/ExpandLess';
 import ExpandMore from 'material-ui-icons/ExpandMore';
-import StarBorder from 'material-ui-icons/StarBorder';
 import Hidden from 'material-ui/Hidden';
 import Divider from 'material-ui/Divider';
 import MenuIcon from 'material-ui-icons/Menu';
@@ -57,6 +54,8 @@ const styles = theme => ({
   },
   nested: {
     paddingLeft: theme.spacing.unit * 4,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
 });
 
@@ -81,15 +80,16 @@ function createData(name, category, uniqueID) {
 class MyChannels extends React.Component {
   state = {
     mobileOpen: false,
-    open: false,
+    open: [],
+    checked: [0],
     data: [],
     originaldata: [],
     selected: [],
     filteredChannels: [],
-    sortIntoCategories: [{count: 0, categoryName: '', channelsInCategory: [] }],
+    sortIntoCategories: [{count: 0, categoryName: '', channelsInCategory: [{channelCount: 0, channel: ''}] }],
   };
 
-  handleClick = () => {
+  handleClick = (event, id) => {
     this.setState({ open: !this.state.open });
   };
 
@@ -97,7 +97,25 @@ class MyChannels extends React.Component {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
 
-  componentDidMount() {
+  handleToggle = value => () => {
+    const { checked } = this.state;
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    this.setState({
+      checked: newChecked,
+    });
+  };
+
+  isOpen = id => this.state.open.indexOf(id) !== -1;
+
+  componentWillMount() {
     this.getChannels();
   }
 
@@ -125,44 +143,26 @@ class MyChannels extends React.Component {
       let findChannels = this.state.originaldata;
       const finalArray = [];
       let count = 0;
-      var channelNameArray = [];
+      let chanCount = 0;
+      var channelsInCategory = [];
       for (const i in chooseCategories) {
         count++;
-        let eachCategory = chooseCategories[i]
+        let categoryName = chooseCategories[i]
         for (const k in findChannels) {
           let eachChannelCategory = findChannels[k].category;
-          if (eachChannelCategory === eachCategory) {
-            channelNameArray.push(findChannels[k].name)
+          if (eachChannelCategory === categoryName) {
+            chanCount++;
+            channelsInCategory.push({channelCount: chanCount, channel: findChannels[k].name})
           }
         }
-        finalArray.push({count, eachCategory, channelNameArray})
-        channelNameArray = [];
+        finalArray.push({count, categoryName, channelsInCategory})
+        channelsInCategory = [];
       }
       this.setState({sortIntoCategories: finalArray})
-      console.log(finalArray)
+      //console.log(finalArray)
       };
     API.getChannels(onSuccess);
   }
-
-  // sortChannelsIntoCategories() {
-  //   let channels = this.state.originaldata;
-  //   console.log(channels)
-  //   const finalArray = [];
-  //   const channelNameArray = [];
-  //   for (const i in chooseCategories) {
-  //     let eachCategory = chooseCategories[i]
-  //     for (const k in channels) {
-  //       let eachChannelCategory = channels[k].category;
-  //       console.log("Test " +eachChannelCategory)
-  //       if (eachChannelCategory === eachCategory) {
-  //         channelNameArray.push(channels[k].name)
-  //       }
-  //     }
-  //     finalArray.push({eachCategory, channelNameArray})
-  //     console.log(finalArray)
-  //   }
-  //   this.setState({sortIntoCategories: finalArray})
-  // }
 
   render() {
     const { classes, theme } = this.props;
@@ -170,24 +170,24 @@ class MyChannels extends React.Component {
     const drawer = (
       <div>
         <div className={classes.toolbar} />
-        Selected Channels
+        Currently Selected Channels
         <List>{this.state.selected}</List>
         <Divider />
           {this.state.sortIntoCategories.map(n => (
             <List key={n.count}>
-                <ListItem button onClick={this.handleClick}>
-                <ListItemText primary={n.eachCategory} />
+                <ListItem button onClick={event => this.handleClick(event, n.count)}>
+                <ListItemText primary={n.categoryName} />
                 {this.state.open ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                      <StarBorder />
-                    </ListItemIcon>
-                    <ListItemText inset primary={n.channelNameArray} />
-                  </ListItem>
-                </List>
+                {n.channelsInCategory.map(m => (
+                  <List key={m.channelCount} dense={true} component="div" disablePadding>
+                    <ListItem onClick={this.handleToggle(m.channelCount)} button className={classes.nested} disableRipple>
+                      <Checkbox checked={this.state.checked.indexOf(m.channelCount) !== -1} tabIndex={-1} disableRipple />
+                      <ListItemText inset primary={m.channel} />
+                    </ListItem>
+                  </List>
+              ))}
               </Collapse>
             </List>
            ))}
@@ -207,7 +207,7 @@ class MyChannels extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" noWrap>
-              Select channels using the list on the left. 
+              Select channels using the list. 
             </Typography>
           </Toolbar>
         </AppBar>
