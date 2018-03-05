@@ -15,6 +15,8 @@ import Hidden from 'material-ui/Hidden';
 import Divider from 'material-ui/Divider';
 import MenuIcon from 'material-ui-icons/Menu';
 import API from './admin/API'
+import ServiceCard from './serviceComponents/ServiceCard'
+import GridList, { GridListTile } from 'material-ui/GridList';
 
 const drawerWidth = 240;
 
@@ -75,10 +77,22 @@ const chooseCategories = [
 ]
 
 let counter = 0;
+let serviceCounter = 0;
+let addonCounter = 0;
 function createData(name, category, uniqueID) {
   counter += 1;
   //console.log(counter)
   return { id: counter, name, category, uniqueID};
+}
+
+function createService(name, description, price, image, website, channels, packages, dvr, devices, uniqueID) {
+  serviceCounter += 1;
+  return { id: serviceCounter, name, description, price, image, website, channels, packages, dvr, devices, uniqueID };
+}
+
+function createAddon(name, description, service, price, channels, dvr, num, uniqueID) {
+  addonCounter += 1;
+  return { id: addonCounter, name, description, service, price, channels, dvr, num, uniqueID};
 }
 
 class MyChannels extends React.Component {
@@ -88,6 +102,8 @@ class MyChannels extends React.Component {
     checked: [],
     data: [],
     originaldata: [],
+    serviceData: [],
+    addonData: [],
     filteredChannels: [],
     sortIntoCategories: [{count: 0, categoryName: '', channelsInCategory: [{channelCount: 0, channel: ''}] }],
   };
@@ -173,8 +189,48 @@ class MyChannels extends React.Component {
     API.getChannels(onSuccess);
   }
 
+  getServices() {
+    const onSuccess = (services) => {
+      let newService;
+      let addThisService;
+      const serviceArray = [];
+      for (const i in services) {
+        newService = services[i];
+        addThisService = createService(newService.name, newService.description, newService.price, newService.image_url, newService.website, newService.base_channels, newService.channel_packages, newService.dvr, newService.numberOfDevices, newService['_id']);
+        serviceArray.push(addThisService);
+      }
+      this.setState({
+        serviceData: serviceArray,
+      });
+    };
+    API.getServices(onSuccess);
+  }
+
+  getAddons() {
+    const onSuccess = (channels) => {
+      let newAddon;
+      let addThisAddon;
+      let addAddonName;
+      const addonArray = [];
+      const addonNames = [];
+      for (const i in channels) {
+        newAddon = channels[i];
+        addThisAddon = createAddon(newAddon.addonName, newAddon.description, newAddon.forService, newAddon.price, newAddon.channels, newAddon.dvr, newAddon.devicesNum, newAddon['_id']);
+        addAddonName = (newAddon.addonName).toLowerCase();
+        addonArray.push(addThisAddon);
+        addonNames.push(addAddonName);
+      }
+      this.setState({
+        addonData: addonArray,
+      });
+    };
+    API.getAddons(onSuccess);
+  }
+
   componentWillMount() {
     this.getChannels();
+    this.getServices();
+    this.getAddons();
   }
 
   render() {
@@ -186,7 +242,7 @@ class MyChannels extends React.Component {
         {this.state.checked.length > 0 ? <Typography>Currently Selected Channels</Typography> : null}
         <List>
           {this.state.checked.map (eachChecked => ( 
-            <ListItem dense={true} onClick={this.handleToggle(eachChecked)} button className={classes.selectedStyle} disableRipple disablePadding>
+            <ListItem key={eachChecked} dense={true} onClick={this.handleToggle(eachChecked)} button className={classes.selectedStyle} disableRipple>
               <Checkbox checked={this.state.checked.indexOf(eachChecked) !== -1} tabIndex={-1} disableRipple />
               <ListItemText inset primary={eachChecked} />
             </ListItem>
@@ -260,7 +316,14 @@ class MyChannels extends React.Component {
         </Hidden>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Typography noWrap>{'You think water moves fast? You should see ice.'}</Typography>
+          <Typography gutterBottom>{'Based on your channel selections, consider the following streaming services.'}</Typography>
+          <GridList className={classes.gridList} cellHeight={'auto'} cols={3}>
+          {this.state.serviceData.map(card => (
+            <GridListTile key={card.id}>
+
+            </GridListTile>
+          ))}
+        </GridList>
         </main>
       </div>
     );
