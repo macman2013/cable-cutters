@@ -17,6 +17,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 import API from './admin/API'
 import ServiceCard from './serviceComponents/ServiceCard'
 import GridList, { GridListTile } from 'material-ui/GridList';
+import MyChannelCard from './MyChannelComponents/MyChannelCard';
 
 const drawerWidth = 240;
 
@@ -320,7 +321,13 @@ class MyChannels extends React.Component {
           <GridList className={classes.gridList} cellHeight={'auto'} cols={3}>
           {this.state.serviceData.map(card => (
             <GridListTile key={card.id}>
-
+              <MyChannelCard serviceTitle={card.name}
+              servicePrice={card.price}
+              serviceWebsite={card.website}
+              servicePackages={this.state.checked}
+              serviceDVR={card.dvr}
+              serviceDeviceNum={card.devices}
+              />
             </GridListTile>
           ))}
         </GridList>
