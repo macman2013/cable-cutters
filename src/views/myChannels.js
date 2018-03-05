@@ -57,6 +57,10 @@ const styles = theme => ({
     paddingTop: 0,
     paddingBottom: 0,
   },
+  selectedStyle: {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
 });
 
 const chooseCategories = [
@@ -81,10 +85,9 @@ class MyChannels extends React.Component {
   state = {
     mobileOpen: false,
     open: [{ catId: 0, isOpen: false }],
-    checked: [0],
+    checked: [],
     data: [],
     originaldata: [],
-    selected: [],
     filteredChannels: [],
     sortIntoCategories: [{count: 0, categoryName: '', channelsInCategory: [{channelCount: 0, channel: ''}] }],
   };
@@ -93,7 +96,7 @@ class MyChannels extends React.Component {
     const { open } = this.state;
     let array = open;
     let findValue = this.state.open[id];
-    console.log((findValue))
+    //console.log((findValue))
     for (const i in array) {
       if (array[i] === findValue) {
         array[i].isOpen = !(array[i].isOpen)
@@ -139,7 +142,6 @@ class MyChannels extends React.Component {
       this.setState({
         data: channelArray,
         originaldata: channelArray,
-        selected: [],
         filteredChannels: channelNames
       });
 
@@ -181,20 +183,27 @@ class MyChannels extends React.Component {
     const drawer = (
       <div>
         <div className={classes.toolbar} />
-        Currently Selected Channels
-        <List>{this.state.selected}</List>
+        {this.state.checked.length > 0 ? <Typography>Currently Selected Channels</Typography> : null}
+        <List>
+          {this.state.checked.map (eachChecked => ( 
+            <ListItem dense={true} onClick={this.handleToggle(eachChecked)} button className={classes.selectedStyle} disableRipple disablePadding>
+              <Checkbox checked={this.state.checked.indexOf(eachChecked) !== -1} tabIndex={-1} disableRipple />
+              <ListItemText inset primary={eachChecked} />
+            </ListItem>
+          ))}
+        </List>
         <Divider />
           {this.state.sortIntoCategories.map(n => (
             <List key={n.count}>
                 <ListItem button onClick={event => this.handleClick(event, n.count)}>
                 <ListItemText primary={n.categoryName} />
                 {this.state.open[n.count].isOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
+                </ListItem>
               <Collapse in={this.state.open[n.count].isOpen} timeout="auto" unmountOnExit>
                 {n.channelsInCategory.map(m => (
                   <List key={m.channelCount} dense={true} component="div" disablePadding>
-                    <ListItem onClick={this.handleToggle(m.channelCount)} button className={classes.nested} disableRipple>
-                      <Checkbox checked={this.state.checked.indexOf(m.channelCount) !== -1} tabIndex={-1} disableRipple />
+                    <ListItem onClick={this.handleToggle(m.channel)} button className={classes.nested} disableRipple>
+                      <Checkbox checked={this.state.checked.indexOf(m.channel) !== -1} tabIndex={-1} disableRipple />
                       <ListItemText inset primary={m.channel} />
                     </ListItem>
                   </List>
