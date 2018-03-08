@@ -324,6 +324,7 @@ class MyChannels extends React.Component {
               <MyChannelCard serviceTitle={card.name}
               servicePrice={card.price}
               serviceWebsite={card.website}
+              serviceChannels={card.channels}
               servicePackages={this.state.checked}
               serviceDVR={card.dvr}
               serviceDeviceNum={card.devices}

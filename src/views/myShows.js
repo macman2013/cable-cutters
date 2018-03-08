@@ -12,10 +12,8 @@ class MyShows extends React.Component {
   render() {
     return (
       <div>
-        <h1>My Shows</h1>
-        <h1>My Shows</h1>
-        <h1>My Shows</h1>
-        <h1>My Shows</h1>
+        <h1>Filtering by show is coming soon!</h1>
+        <h1>Please stay tuned.</h1>
 
       </div>
     );
