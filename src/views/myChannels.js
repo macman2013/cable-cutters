@@ -15,7 +15,6 @@ import Hidden from 'material-ui/Hidden';
 import Divider from 'material-ui/Divider';
 import MenuIcon from 'material-ui-icons/Menu';
 import API from './admin/API'
-import ServiceCard from './serviceComponents/ServiceCard'
 import GridList, { GridListTile } from 'material-ui/GridList';
 import MyChannelCard from './MyChannelComponents/MyChannelCard';
 
@@ -80,6 +79,7 @@ const chooseCategories = [
 let counter = 0;
 let serviceCounter = 0;
 let addonCounter = 0;
+//let selectedCount = 0;
 function createData(name, category, uniqueID) {
   counter += 1;
   //console.log(counter)
@@ -107,6 +107,7 @@ class MyChannels extends React.Component {
     addonData: [],
     filteredChannels: [],
     sortIntoCategories: [{count: 0, categoryName: '', channelsInCategory: [{channelCount: 0, channel: ''}] }],
+    selectedData: [],
   };
 
   handleClick = (event, id) => {
@@ -133,6 +134,7 @@ class MyChannels extends React.Component {
 
     if (currentIndex === -1) {
       newChecked.push(value);
+      this.getReqsForChannels(value)
     } else {
       newChecked.splice(currentIndex, 1);
     }
@@ -141,6 +143,29 @@ class MyChannels extends React.Component {
       checked: newChecked,
     });
   };
+
+  getReqsForChannels(lookFor) {
+    const checkArray = this.state.selectedData;
+    for (const i in this.state.serviceData) {
+      //console.log("Service Data")
+      let serviceChannels = this.state.serviceData[i].channels
+      for (const k in serviceChannels) {
+        //console.log("Channels")
+        if (lookFor === serviceChannels[k]) {
+          console.log(lookFor + " was found in the standard channel package for " + this.state.serviceData[i].name)
+        } 
+      }
+      for (const j in this.state.addonData) {
+        let lookInAddon = this.state.addonData[j].channels;
+        let forServ = this.state.addonData[j].service;
+        for (const t in lookInAddon) {
+          if (lookInAddon[t] === lookFor && (forServ === this.state.serviceData[i].name)) {
+            console.log(lookFor + " was found in the addon " + this.state.addonData[j].name + " for " + this.state.serviceData[i].name)
+          }
+        }
+      }
+    }
+  }
 
   getChannels() {
     const onSuccess = (channels) => {
@@ -325,7 +350,7 @@ class MyChannels extends React.Component {
               servicePrice={card.price}
               serviceWebsite={card.website}
               serviceChannels={card.channels}
-              servicePackages={this.state.checked}
+              serviceSelections={this.state.checked}
               serviceDVR={card.dvr}
               serviceDeviceNum={card.devices}
               />

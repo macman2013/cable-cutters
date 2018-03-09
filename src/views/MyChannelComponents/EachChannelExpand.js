@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import ExpansionPanel, {ExpansionPanelSummary, ExpansionPanelDetails} from 'material-ui/ExpansionPanel';
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import API from '../admin/API';
+//import API from '../admin/API';
 
 const styles = theme => ({
   root: {
@@ -27,7 +27,7 @@ const styles = theme => ({
   }
 });
 
-class EachChannelExpand extends React.Component {
+class AddOnExpand extends React.Component {
 
     constructor(props) {
         super(props);
@@ -37,35 +37,14 @@ class EachChannelExpand extends React.Component {
     }
 
     componentWillMount() {
-        this.getReqsForChannels()
-    }
 
-    componentWillReceiveProps() {
-        this.getReqsForChannels()
-    }
-
-    getReqsForChannels() {
-        if (this.props.standardChannels) {
-            let allStandardChannels = this.props.standardChannels;
-            let allCheckedChannels = this.props.addons;
-            for (const i in allStandardChannels) {
-                for (const j in allCheckedChannels) {
-                    let eachCheckedChannel = allCheckedChannels[j]
-                    //console.log("Checked Channel: " + eachCheckedChannel)
-                    //console.log("Current Channel" + allStandardChannels[i])
-                    if (eachCheckedChannel === allStandardChannels[i]) {
-                        console.log(eachCheckedChannel + " found in the standard channel list for " + this.props.name)
-                    }
-                }
-            }
-        }
     }
 
     render() {
         const { classes } = this.props;
         return (
         <div className={classes.root}>
-        {this.props.addons.map(panel => (
+        {this.props.selections.map(panel => (
             <ExpansionPanel key={panel} disabled={true} >
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>{panel}</Typography>
@@ -81,8 +60,8 @@ class EachChannelExpand extends React.Component {
     }
 }
 
-EachChannelExpand.propTypes = {
+AddOnExpand.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(EachChannelExpand);
+export default withStyles(styles)(AddOnExpand);

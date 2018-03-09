@@ -47,7 +47,7 @@ class MyChannelCard extends React.Component {
                 dvr ={this.props.serviceDVR}
                 />
                 <div className={classes.subheading}>Selected Channels</div>
-                <EachChannelExpand name={this.props.serviceTitle} addons={this.props.servicePackages} standardChannels={this.props.serviceChannels} />
+                <EachChannelExpand name={this.props.serviceTitle} selections={this.props.serviceSelections} standardChannels={this.props.serviceChannels} />
             </Paper>
         );
     }
