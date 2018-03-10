@@ -136,8 +136,13 @@ class EachChannelExpand extends React.Component {
 
     componentWillReceiveProps() {
         this.getInfoChannels();
-        console.log(this.state.data)
+        //console.log(this.state.data)
     }
+
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log("Need update")
+    //     return nextState.data !== this.state.data;
+    // }
     
     componentWillMount() {
         this.getServices();
