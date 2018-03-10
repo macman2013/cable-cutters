@@ -5,6 +5,7 @@ import ExpansionPanel, {ExpansionPanelSummary, ExpansionPanelDetails} from 'mate
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import API from '../admin/API';
+import MyChannelGrid from './MyChannelGrid'
 
 const styles = theme => ({
   root: {
@@ -12,14 +13,13 @@ const styles = theme => ({
     textAlign: 'left',
   },
   heading: {
-    width: '85%',
+    width: '50%',
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
   },
   priceAlign: {
-    width: '15%',
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
+    width: '50%',
+    fontSize: theme.typography.pxToRem(13),
   },
   desc: {
       fontSize: 13,
@@ -93,6 +93,7 @@ class EachChannelExpand extends React.Component {
     getInfoChannels() {
         var infoArray = [];
         const formattedArray = [];
+        var desc = null;
         for (const i in this.props.selections) {
             let currentServiceName = this.props.name;
             let currentChannel = this.props.selections[i]
@@ -104,7 +105,8 @@ class EachChannelExpand extends React.Component {
                         let currentChannelofAll = serviceChannels[k];
                         if ((currentChannelofAll === currentChannel) && (currentServiceName === serviceName) ) {
                             //console.log("Found " + currentChannel + " in " + currentServiceName)
-                            infoArray.push({service: currentServiceName, addon: '', desc: currentChannel + ' is found in the standard channels of ' + currentServiceName, isDisabled: false})
+                            infoArray.push({service: currentServiceName, addon: '', price: ''})
+                            desc = currentChannel + ' is found in the standard channels of ' + currentServiceName;
                         }
                     }
                     let allAddons = this.state.addondata;
@@ -112,26 +114,29 @@ class EachChannelExpand extends React.Component {
                         let addonName = this.state.addondata[l].name 
                         let addonChannels = this.state.addondata[l].channels
                         let addonService = this.state.addondata[l].service
+                        let addonPrice = this.state.addondata[l].price
                         for (const m in addonChannels) {
                             let currentAddonChannel = addonChannels[m];
                             if ((currentAddonChannel === currentChannel) && (addonService === serviceName) ) {
                                 //console.log("Found " + currentChannel + " in the addon " + addonName + " for " + currentServiceName)
-                                infoArray.push({service: currentServiceName, addon: addonName, desc: currentChannel + ' is found in the following add-ons for ' + currentServiceName, isDisabled: false})
+                                infoArray.push({service: currentServiceName, addon: addonName, price: addonPrice})
+                                desc = currentChannel + ' is found in the following add-ons for ' + currentServiceName
                             }
                         }
                     }
                 }
             }
-            formattedArray.push({chan: currentChannel, infoArray})
+            formattedArray.push({chan: currentChannel, desc: desc, infoArray})
             //console.log(formattedArray)
             this.setState({data: formattedArray})
             infoArray = [];
+            desc = null;
         }
     }
 
     componentWillReceiveProps() {
         this.getInfoChannels();
-        //console.log(this.state.data)
+        console.log(this.state.data)
     }
     
     componentWillMount() {
@@ -144,14 +149,16 @@ class EachChannelExpand extends React.Component {
         return (
         <div className={classes.root}>
         {this.state.data.map(panel => (
-            <ExpansionPanel key={panel.chan} disabled={false} >
+            <ExpansionPanel key={panel.chan} disabled={!panel.desc ? true : false } >
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>{panel.chan}</Typography>
+                <Typography className={classes.priceAlign}>{!panel.desc ? "Channel not available" : null}</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-                {panel.infoArray.map(m => (
-                    <span className={classes.desc}>{m.desc}</span>
-                ))}
+                <span className={classes.desc}>
+                    {panel.desc}
+                    <MyChannelGrid addons={panel.infoArray} />
+                </span>
             </ExpansionPanelDetails>
             </ExpansionPanel>
         ))}
