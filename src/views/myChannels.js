@@ -79,7 +79,6 @@ const chooseCategories = [
 let counter = 0;
 let serviceCounter = 0;
 let addonCounter = 0;
-//let selectedCount = 0;
 function createData(name, category, uniqueID) {
   counter += 1;
   //console.log(counter)
@@ -134,7 +133,6 @@ class MyChannels extends React.Component {
 
     if (currentIndex === -1) {
       newChecked.push(value);
-      this.getReqsForChannels(value)
     } else {
       newChecked.splice(currentIndex, 1);
     }
@@ -144,28 +142,36 @@ class MyChannels extends React.Component {
     });
   };
 
-  getReqsForChannels(lookFor) {
-    const checkArray = this.state.selectedData;
-    for (const i in this.state.serviceData) {
-      //console.log("Service Data")
-      let serviceChannels = this.state.serviceData[i].channels
-      for (const k in serviceChannels) {
-        //console.log("Channels")
-        if (lookFor === serviceChannels[k]) {
-          console.log(lookFor + " was found in the standard channel package for " + this.state.serviceData[i].name)
-        } 
-      }
-      for (const j in this.state.addonData) {
-        let lookInAddon = this.state.addonData[j].channels;
-        let forServ = this.state.addonData[j].service;
-        for (const t in lookInAddon) {
-          if (lookInAddon[t] === lookFor && (forServ === this.state.serviceData[i].name)) {
-            console.log(lookFor + " was found in the addon " + this.state.addonData[j].name + " for " + this.state.serviceData[i].name)
-          }
-        }
-      }
-    }
-  }
+  // getReqsForChannels(lookFor) {
+  //   const checkArray = this.state.selectedData;
+  //   for (const i in this.state.serviceData) {
+  //     //console.log("Service Data")
+  //     let serviceChannels = this.state.serviceData[i].channels
+  //     for (const k in serviceChannels) {
+  //       //console.log("Channels")
+  //       if (lookFor === serviceChannels[k]) {
+  //         //console.log(lookFor + " was found in the standard channel package for " + this.state.serviceData[i].name)
+  //         checkArray.push({id: selectedCount, chan: lookFor, service: this.state.serviceData[i].name, isDisabled: false })
+  //         selectedCount++
+  //       } 
+  //     }
+  //     for (const j in this.state.addonData) {
+  //       let lookInAddon = this.state.addonData[j].channels;
+  //       let forServ = this.state.addonData[j].service;
+  //       for (const t in lookInAddon) {
+  //         if (lookInAddon[t] === lookFor && (forServ === this.state.serviceData[i].name)) {
+  //           //console.log(lookFor + " was found in the addon " + this.state.addonData[j].name + " for " + this.state.serviceData[i].name)
+  //           checkArray.push({id: selectedCount, chan: lookFor, service: forServ, addon: this.state.addonData[j].name, isDisabled: false })
+  //           selectedCount++
+  //         }
+  //       }
+  //     }
+
+  //     //selectedCount++
+  //     this.setState({selectedData: checkArray})
+  //     console.log(this.state.selectedData)
+  //   }
+  // }
 
   getChannels() {
     const onSuccess = (channels) => {
@@ -353,6 +359,7 @@ class MyChannels extends React.Component {
               serviceSelections={this.state.checked}
               serviceDVR={card.dvr}
               serviceDeviceNum={card.devices}
+              /* serviceSelectData={this.state.selectedData} */
               />
             </GridListTile>
           ))}
