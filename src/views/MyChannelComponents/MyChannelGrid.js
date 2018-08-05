@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import GridList, { GridListTile } from 'material-ui/GridList';
+import { withStyles } from '@material-ui/core/styles';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 import AddonCard from './AddonCard'
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   root: {
