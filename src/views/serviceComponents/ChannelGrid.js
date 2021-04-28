@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import ChannelCard from './ChannelCard'
 import Typography from '@material-ui/core/Typography';
 
-const styles = theme => ({
+const styles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -28,36 +28,29 @@ const styles = theme => ({
   subhead: {
     marginBottom: 10,
   }
-});
+}));
 
-class ChannelGrid extends React.Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
+export default function ChannelGrid({channels}) {
+  const classes = styles()
+  const [data, setData] = React.useState([])
 
-  componentWillMount() {
-    this.getBaseChannels();
-  }
+  React.useEffect(() => {
+    getBaseChannels()
+  }, [])
 
-  getBaseChannels() {
+  const getBaseChannels = () => {
     let singleChannel;
     var counter = 0;
     const channelArray = [];
-    for (const i in this.props.channels) {
+    for (const i in channels) {
         counter++;
-        singleChannel = {id: counter, name: this.props.channels[i]};
+        singleChannel = {id: counter, name: channels[i]};
         channelArray.push(singleChannel);
     }
-    this.setState({data: channelArray});
+    setData(channelArray)
   }
-  
-  render() {
-    const { classes } = this.props;
-    if (this.props.channels.length <= 0) {
+
+    if (channels.length <= 0) {
       return (
         <span className={classes.root}></span>
       );
@@ -67,7 +60,7 @@ class ChannelGrid extends React.Component {
       <span className={classes.root}>
       <Typography variant="subheading" className={classes.subhead} color="inherit">Standard Channels</Typography>
       <GridList className={classes.gridList} cellHeight={100} cols={2}>
-        {this.state.data.map(card => (
+        {data.map(card => (
           <GridListTile key={card.id}>
             <ChannelCard eachChannel={card.name} />
           </GridListTile>
@@ -75,11 +68,4 @@ class ChannelGrid extends React.Component {
       </GridList>
     </span>
     );
-  }
 }
-
-ChannelGrid.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ChannelGrid);
