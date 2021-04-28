@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-const styles = theme => ({
+const styles = makeStyles(theme => ({
   root: theme.mixins.gutters({
     paddingTop: 16,
     paddingBottom: 16,
@@ -14,19 +14,11 @@ const styles = theme => ({
     marginLeft: 60,
   }),
   heading: {marginTop:15}
-});
+}));
 
-class About extends React.Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      
-    };
-  }
-  
-  render() {
-    const { classes } = this.props;
+export default function About() {
+
+    const classes = styles();
     return (
       <div>
       <Paper className={classes.root} elevation={2}>
@@ -48,7 +40,7 @@ class About extends React.Component {
         <Divider />
         <Typography className={classes.heading} component="p">
         This website was originally created by Dale Keith, who could not find a good way to compare different live TV streaming ("cord-cutting") services. 
-        There were many articles and blog posta about each individual service, but they were not always up-tp-date and none of them offered a way for a reader to find the best option based on their individual watching habits.<br /><br /> 
+        There were many articles and blog posta about each individual service, but they were not always up-to-date and none of them offered a way for a reader to find the best option based on their individual watching habits.<br /><br /> 
         So, this app was created.
         </Typography>
       </Paper>
@@ -66,11 +58,8 @@ class About extends React.Component {
       </Paper>
       </div>
     );
-  }
 }
 
 About.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
-export default withStyles(styles)(About);

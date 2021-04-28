@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-const styles = theme => ({
+const styles = makeStyles(theme => ({
   card: {
     minWidth: 275,
   },
@@ -29,62 +29,47 @@ const styles = theme => ({
     marginBottom: 12,
     color: theme.palette.text.secondary,
   },
-});
+}));
 
-class ServiceInfoBox extends React.Component {
+export default function ServiceInfoBox({price, dvr, title, description, numberDev, website}) {
+    const classes = styles()
+    const [formattedDVR, setformattedDVR] = React.useState('')
+    const [formattedPrice, setformattedPrice] = React.useState('')
 
-    constructor(props) {
-        super(props);
-        this.state = {
-          formattedDVR: '',
-          formattedPrice: '',
-        };
-      }
-
-      formatDVR() {
-        if (this.props.dvr === true) {
-          this.setState({formattedDVR: 'Includes DVR'});
+      const formatDVR = () => {
+        if (dvr === true) {
+          setformattedDVR('Includes DVR')
         }
         else {
-          this.setState({formattedDVR: 'Does not include DVR'});
+          setformattedDVR('Does not include DVR')
         }
       }
 
-      formatPrice() {
-        if (!isNaN(this.props.price)) {
-          this.setState({formattedPrice: '$' + this.props.price});
+      const formatPrice = () => {
+        if (!isNaN(price)) {
+          setformattedPrice(`$ ${price}`)
         }
         else {
-          this.setState({formattedPrice: this.props.price});
+          setformattedPrice(price)
         }
       }
 
-      componentDidMount() {
-        this.formatDVR();
-        this.formatPrice();
-      }
+      React.useEffect(() => {
+        formatDVR()
+        formatPrice()
+      }, [])
 
-      render() {
-        const { classes } = this.props;
         return (
             <div>
             <Paper className={classes.card} elevation={0}>
-                <Typography className={classes.title} variant="headline" component="h2">{this.props.title}</Typography>
+                <Typography className={classes.title} variant="headline" component="h2">{title}</Typography>
                 <Divider />
-                <Typography className={classes.desc}>{this.props.description}</Typography>
-                <Typography className={classes.pos}>Base Price: {this.state.formattedPrice}</Typography>
-                <Typography component="p">Includes  {this.props.numberDev} Device(s)</Typography>
-                <Typography component="p"><a href={this.props.website}>View Website</a></Typography>
-                <Typography component="p">{this.state.formattedDVR}</Typography>
+                <Typography className={classes.desc}>{description}</Typography>
+                <Typography className={classes.pos}>Base Price: {formattedPrice}</Typography>
+                <Typography component="p">Includes  {numberDev} Device(s)</Typography>
+                <Typography component="p"><a href={website}>View Website</a></Typography>
+                <Typography component="p">{formattedDVR}</Typography>
             </Paper>
             </div>
         );
     }
-
-}
-
-ServiceInfoBox.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
-  
-  export default withStyles(styles)(ServiceInfoBox);

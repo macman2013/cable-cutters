@@ -11,10 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
-import { InputLabel } from '@material-ui/core/Input';
-import { FormControl } from '@material-ui/core/FormControl';
+import { FormControl, InputLabel, MenuItem } from '@material-ui/core';
 import Select from '@material-ui/core/Select';
-import { MenuItem } from '@material-ui/core/Menu';
 import API from './API.js';
 
 

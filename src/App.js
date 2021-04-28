@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
 import SiteNavMenu from './SiteNavMenu';
 
-class App extends Component {
-  render() {
+export default function App() {
     return (
       <div className="App">
         <SiteNavMenu />
       </div>
     );
-  }
 }
-
-export default App;

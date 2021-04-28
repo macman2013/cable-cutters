@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import API from '../views/admin/API'
 import ServiceCard from './serviceComponents/ServiceCard'
 
-const styles = theme => ({
+const styles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -25,7 +25,7 @@ const styles = theme => ({
   title: {
     color: theme.palette.primary.light,
   },
-});
+}));
 
 let counter = 0;
 function createData(name, description, price, image, website, channels, packages, dvr, devices, uniqueID) {
@@ -33,20 +33,15 @@ function createData(name, description, price, image, website, channels, packages
   return { id: counter, name, description, price, image, website, channels, packages, dvr, devices, uniqueID };
 }
 
-class AllServices extends React.Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
+export default function AllServices() {
+  const classes = styles()
+  const [data, setData] = React.useState([])
 
-  componentDidMount() {
-    this.getServices();
-  }
+  React.useEffect(() => {
+    getServices()
+  }, [])
 
-  getServices() {
+  const getServices = () => {
     const onSuccess = (services) => {
       let newService;
       let addThisService;
@@ -56,19 +51,15 @@ class AllServices extends React.Component {
         addThisService = createData(newService.name, newService.description, newService.price, newService.image_url, newService.website, newService.base_channels, newService.channel_packages, newService.dvr, newService.numberOfDevices, newService['_id']);
         serviceArray.push(addThisService);
       }
-      this.setState({
-        data: serviceArray,
-      });
+      setData(serviceArray)
     };
     API.getServices(onSuccess);
   }
-  
-  render() {
-    const { classes } = this.props;
+
     return (
       <div className={classes.root}>
       <GridList className={classes.gridList} cellHeight={'auto'} cols={3}>
-        {this.state.data.map(card => (
+        {data.map(card => (
           <GridListTile key={card.id}>
             <ServiceCard serviceTitle={card.name}
             serviceDescription={card.description}
@@ -84,11 +75,4 @@ class AllServices extends React.Component {
       </GridList>
     </div>
     );
-  }
 }
-
-AllServices.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(AllServices);

@@ -1,15 +1,7 @@
 import React from 'react';
 
-class MyShows extends React.Component {
+export default function MyShows() {
   
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: 3,
-    };
-  }
-  
-  render() {
     return (
       <div>
         <h1>Filtering by show is coming soon!</h1>
@@ -17,7 +9,4 @@ class MyShows extends React.Component {
 
       </div>
     );
-  }
 }
-
-export default MyShows;

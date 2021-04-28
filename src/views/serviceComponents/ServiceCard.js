@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import ServiceInfoBox from './ServiceInfoBox'
 import ChannelGrid from './ChannelGrid';
 import AddOnExpand from './AddOnExpand';
 
-const styles = theme => ({
+const styles = makeStyles(theme => ({
   card: {
     minWidth: 275,
     marginLeft: 40,
@@ -26,39 +26,29 @@ const styles = theme => ({
     marginBottom: 12,
     color: theme.palette.text.secondary,
   },
-});
+}));
 
-class ServiceCard extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-          data: [],
-        };
-      }
-
-      render() {
-        const { classes } = this.props;
-        return (
-            <Paper className={classes.card} elevation={0}>
-                <ServiceInfoBox title ={this.props.serviceTitle}
-                description ={this.props.serviceDescription}
-                price ={this.props.servicePrice}
-                numberDev ={this.props.serviceDeviceNum}
-                website ={this.props.serviceWebsite}
-                dvr ={this.props.serviceDVR}
-                />
-                <ChannelGrid channels={this.props.serviceChannels} />
-                <div className={classes.subheading}>Add-ons & Channel Packages</div>
-                <AddOnExpand name={this.props.serviceTitle} addons={this.props.servicePackages} />
-            </Paper>
-        );
-    }
-
-}
+export default function ServiceCard({serviceTitle, serviceDescription, servicePrice, serviceDeviceNum, 
+  serviceWebsite, serviceDVR, serviceChannels, servicePackages
+}) {
+  const classes = styles();
+  return (
+      <Paper className={classes.card} elevation={0}>
+          <ServiceInfoBox title={serviceTitle}
+          description={serviceDescription}
+          price={servicePrice}
+          numberDev={serviceDeviceNum}
+          website={serviceWebsite}
+          dvr={serviceDVR}
+          />
+          <ChannelGrid channels={serviceChannels} />
+          <div className={classes.subheading}>Add-ons & Channel Packages</div>
+          <AddOnExpand name={serviceTitle} addons={servicePackages} />
+      </Paper>
+  )
+};
 
 ServiceCard.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  classes: PropTypes.object.isRequired,
+};
   
-  export default withStyles(styles)(ServiceCard);
