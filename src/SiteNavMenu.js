@@ -17,7 +17,7 @@ import AddStreamingService from './views/admin/addStreamingService';
 import AddChannel from './views/admin/addChannel';
 import AddAddOn from './views/admin/addAddOn';
 
-const styles = {
+const styles = makeStyles(theme => ({
   root: {
     width: '100%',
   },
@@ -29,11 +29,10 @@ const styles = {
     marginRight: 28,
     textDecoration: 'none'
   },
-};
+}));
 
-class SiteNavMenu extends Component {
-  render() {
-    const { classes } = this.props;
+export default function SiteNavMenu() {
+  const classes = styles();
     return (
         <div className={classes.root}>
         <AppBar position="sticky">
@@ -63,11 +62,8 @@ class SiteNavMenu extends Component {
           <Route path="/admin/:id/editAddon" component={AddAddOn}/>
         </div>
       );
-    }
   }
 
   SiteNavMenu.propTypes = {
     classes: PropTypes.object.isRequired,
   };
-  
-  export default withStyles(styles)(SiteNavMenu);

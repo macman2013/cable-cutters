@@ -1,8 +1,8 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Table, {
+import { Table, 
   TableBody,
   TableCell,
   TableFooter,
@@ -10,7 +10,7 @@ import Table, {
   TablePagination,
   TableRow,
   TableSortLabel,
-} from '@material-ui/core/Table';
+} from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -121,7 +121,7 @@ let EnhancedTableToolbar = props => {
 
   return (
     <Toolbar
-      className={classNames(classes.root, {
+      className={clsx(classes.root, {
         [classes.highlight]: numSelected > 0,
       })}
     >

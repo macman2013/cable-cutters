@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Tabs, { Tab } from '@material-ui/core/Tabs';
+import { Tabs, Tab, Paper } from '@material-ui/core';
 import ServiceTable from './ServiceTable';
 import ChannelTable from './ChannelTable';
 import AddonTable from './AddonTable';
