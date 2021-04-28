@@ -1,15 +1,7 @@
 import React from 'react';
 
-class Home extends React.Component {
+export default function Home() {
   
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: 3,
-    };
-  }
-  
-  render() {
     return (
       <div>
         <h1>HOME</h1>
@@ -19,7 +11,4 @@ class Home extends React.Component {
 
       </div>
     );
-  }
 }
-
-export default Home;
