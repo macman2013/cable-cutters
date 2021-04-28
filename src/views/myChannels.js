@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -23,7 +22,7 @@ import MyChannelCard from './MyChannelComponents/MyChannelCard';
 
 const drawerWidth = 240;
 
-const styles = theme => ({
+const styles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     minHeight: 750,
@@ -66,7 +65,7 @@ const styles = theme => ({
     paddingTop: 0,
     paddingBottom: 0,
   },
-});
+}));
 
 const chooseCategories = [
   'Local Broadcast',
@@ -98,39 +97,36 @@ function createAddon(name, description, service, price, channels, dvr, num, uniq
   return { id: addonCounter, name, description, service, price, channels, dvr, num, uniqueID};
 }
 
-class MyChannels extends React.Component {
-  state = {
-    mobileOpen: false,
-    open: [{ catId: 0, isOpen: false }],
-    checked: [],
-    data: [],
-    originaldata: [],
-    serviceData: [],
-    addonData: [],
-    filteredChannels: [],
-    sortIntoCategories: [{count: 0, categoryName: '', channelsInCategory: [{channelCount: 0, channel: ''}] }],
-    selectedData: [],
-  };
+export default function MyChannels() {
+  const classes = styles()
+  const [open, setOpen] = React.useState([{ catId: 0, isOpen: false }])
+  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [checked, setChecked] = React.useState([])
+  const [data, setData] = React.useState([])
+  const [originaldata, setOriginaldata] = React.useState([])
+  const [serviceData, setServiceData] = React.useState([])
+  const [addOnData, setAddOnData] = React.useState([])
+  const [filteredChannels, setFilteredChannels] = React.useState([])
+  const [sortIntoCategories, setCategories] = React.useState([{count: 0, categoryName: '', channelsInCategory: [{channelCount: 0, channel: ''}] }])
+  const [selectedData, setSelectedData] = React.useState([])
 
-  handleClick = (event, id) => {
-    const { open } = this.state;
-    let array = open;
-    let findValue = this.state.open[id];
+  const handleClick = (event, id) => {
+    let array = [...open];
+    let findValue = array[id];
     //console.log((findValue))
     for (const i in array) {
       if (array[i] === findValue) {
         array[i].isOpen = !(array[i].isOpen)
-        this.setState({open: array})
+        setOpen(array)
       }
     }
   };
 
-  handleDrawerToggle = () => {
-    this.setState({ mobileOpen: !this.state.mobileOpen });
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen)
   };
 
-  handleToggle = value => () => {
-    const { checked } = this.state;
+  const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -140,12 +136,10 @@ class MyChannels extends React.Component {
       newChecked.splice(currentIndex, 1);
     }
 
-    this.setState({
-      checked: newChecked,
-    });
+    setChecked(newChecked)
   };
 
-  getChannels() {
+  const getChannels = () => {
     const onSuccess = (channels) => {
       let newChannel;
       let addThisChannel;
@@ -159,13 +153,11 @@ class MyChannels extends React.Component {
         channelArray.push(addThisChannel);
         channelNames.push(addChannelName);
       }
-      this.setState({
-        data: channelArray,
-        originaldata: channelArray,
-        filteredChannels: channelNames
-      });
+      setData(channelArray)
+      setOriginaldata(channelArray)
+      setFilteredChannels(channelNames)
 
-      let findChannels = this.state.originaldata;
+      let findChannels = [...channelArray];
       const finalArray = [];
       const openArray = [];
       let count = 0;
@@ -174,7 +166,7 @@ class MyChannels extends React.Component {
       for (const i in chooseCategories) {
         let categoryName = chooseCategories[i]
         openArray.push({catId: count, isOpen: false})
-        this.setState({open: openArray})
+        setOpen(openArray)
         //console.log(openArray)
         for (const k in findChannels) {
           let eachChannelCategory = findChannels[k].category;
@@ -187,13 +179,13 @@ class MyChannels extends React.Component {
         channelsInCategory = [];
         count++;
       }
-      this.setState({sortIntoCategories: finalArray})
+      setCategories(finalArray)
       //console.log(finalArray)
       };
     API.getChannels(onSuccess);
   }
 
-  getServices() {
+  const getServices = () => {
     const onSuccess = (services) => {
       let newService;
       let addThisService;
@@ -203,14 +195,12 @@ class MyChannels extends React.Component {
         addThisService = createService(newService.name, newService.description, newService.price, newService.image_url, newService.website, newService.base_channels, newService.channel_packages, newService.dvr, newService.numberOfDevices, newService['_id']);
         serviceArray.push(addThisService);
       }
-      this.setState({
-        serviceData: serviceArray,
-      });
+      setServiceData(serviceArray)
     };
     API.getServices(onSuccess);
   }
 
-  getAddons() {
+  const getAddons = () => {
     const onSuccess = (channels) => {
       let newAddon;
       let addThisAddon;
@@ -224,46 +214,41 @@ class MyChannels extends React.Component {
         addonArray.push(addThisAddon);
         addonNames.push(addAddonName);
       }
-      this.setState({
-        addonData: addonArray,
-      });
+      setAddOnData(addonArray)
     };
     API.getAddons(onSuccess);
   }
 
-  componentWillMount() {
-    this.getChannels();
-    this.getServices();
-    this.getAddons();
-  }
-
-  render() {
-    const { classes, theme } = this.props;
+  React.useEffect(() => {
+    getChannels()
+    getAddons()
+    getServices()
+  }, [])
 
     const drawer = (
       <div>
         <div className={classes.toolbar} />
-        {this.state.checked.length > 0 ? <Typography>Currently Selected Channels</Typography> : null}
+        {checked.length > 0 ? <Typography>Currently Selected Channels</Typography> : null}
         <List>
-          {this.state.checked.map (eachChecked => ( 
-            <ListItem key={eachChecked} dense={true} onClick={this.handleToggle(eachChecked)} button className={classes.selectedStyle} disableRipple>
-              <Checkbox checked={this.state.checked.indexOf(eachChecked) !== -1} tabIndex={-1} disableRipple />
+          {checked.map (eachChecked => ( 
+            <ListItem key={eachChecked} dense={true} onClick={handleToggle(eachChecked)} button className={classes.selectedStyle} disableRipple>
+              <Checkbox checked={checked.indexOf(eachChecked) !== -1} tabIndex={-1} disableRipple />
               <ListItemText inset primary={eachChecked} />
             </ListItem>
           ))}
         </List>
         <Divider />
-          {this.state.sortIntoCategories.map(n => (
+          {sortIntoCategories.map(n => (
             <List key={n.count}>
-                <ListItem button onClick={event => this.handleClick(event, n.count)}>
+                <ListItem button onClick={event => handleClick(event, n.count)}>
                 <ListItemText primary={n.categoryName} />
-                {this.state.open[n.count].isOpen ? <ExpandLess /> : <ExpandMore />}
+                {open[n.count].isOpen ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
-              <Collapse in={this.state.open[n.count].isOpen} timeout="auto" unmountOnExit>
+              <Collapse in={open[n.count].isOpen} timeout="auto" unmountOnExit>
                 {n.channelsInCategory.map(m => (
                   <List key={m.channelCount} dense={true} component="div" disablePadding>
-                    <ListItem onClick={this.handleToggle(m.channel)} button className={classes.nested} disableRipple>
-                      <Checkbox checked={this.state.checked.indexOf(m.channel) !== -1} tabIndex={-1} disableRipple />
+                    <ListItem onClick={handleToggle(m.channel)} button className={classes.nested} disableRipple>
+                      <Checkbox checked={checked.indexOf(m.channel) !== -1} tabIndex={-1} disableRipple />
                       <ListItemText inset primary={m.channel} />
                     </ListItem>
                   </List>
@@ -281,7 +266,7 @@ class MyChannels extends React.Component {
             <IconButton
               color="inherit"
               aria-label="open drawer"
-              onClick={this.handleDrawerToggle}
+              onClick={handleDrawerToggle}
               className={classes.navIconHide}
             >
               <MenuIcon />
@@ -294,9 +279,9 @@ class MyChannels extends React.Component {
         <Hidden mdUp>
           <Drawer
             variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            open={this.state.mobileOpen}
-            onClose={this.handleDrawerToggle}
+            anchor={'left'}
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
             classes={{
               paper: classes.drawerPaper,
             }}
@@ -322,16 +307,16 @@ class MyChannels extends React.Component {
           <div className={classes.toolbar} />
           <Typography gutterBottom>{'Based on your channel selections, consider the following streaming services.'}</Typography>
           <GridList className={classes.gridList} cellHeight={'auto'} cols={3}>
-          {this.state.serviceData.map(card => (
+          {serviceData.map(card => (
             <GridListTile key={card.id}>
               <MyChannelCard serviceTitle={card.name}
               servicePrice={card.price}
               serviceWebsite={card.website}
               serviceChannels={card.channels}
-              serviceSelections={this.state.checked}
+              serviceSelections={checked}
               serviceDVR={card.dvr}
               serviceDeviceNum={card.devices}
-              /* serviceSelectData={this.state.selectedData} */
+              /* serviceSelectData={selectedData} */
               />
             </GridListTile>
           ))}
@@ -340,11 +325,3 @@ class MyChannels extends React.Component {
       </div>
     );
   }
-}
-
-MyChannels.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, { withTheme: true })(MyChannels);
